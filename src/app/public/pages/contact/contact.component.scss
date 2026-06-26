@@ -1,0 +1,231 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.contact {
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    align-items: start;
+
+    &--compact {
+      grid-template-columns: 1fr;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__info {
+    h2 {
+      font-size: clamp(1.5rem, 4vw, 1.85rem);
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+  }
+
+  &__steps {
+    margin: 0 0 2rem;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+    li {
+      position: relative;
+      padding-left: 2.5rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: $color-charcoal;
+
+      &::before {
+        counter-increment: step;
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1.75rem;
+        height: 1.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        background: $color-charcoal;
+        color: $color-cream;
+        border-radius: 50%;
+      }
+
+      strong {
+        display: block;
+        margin-bottom: 0.15rem;
+      }
+    }
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__card {
+    @include card-surface;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.95rem;
+  }
+
+  &__card-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $color-steel;
+  }
+
+  &__note {
+    font-size: 0.85rem;
+    color: $color-steel;
+    line-height: 1.6;
+    padding: 1rem;
+    border-left: 3px solid $color-brown-light;
+    background: rgba($color-brown-light, 0.08);
+    margin: 0;
+  }
+
+  &__form-wrap {
+    @include card-surface;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+  }
+
+  &__prefill {
+    margin-bottom: 1.25rem;
+  }
+
+  &__readonly {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.15rem;
+    margin-bottom: 1.25rem;
+    background: rgba($color-charcoal, 0.04);
+    border: 1px solid $color-cream-dark;
+    border-radius: $radius-sm;
+  }
+
+  &__readonly-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $color-steel;
+  }
+
+  &__readonly-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-family: $font-heading;
+    color: $color-charcoal;
+  }
+
+  &__form-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid $color-cream-dark;
+    h3 {
+      font-size: 1.35rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: $color-steel;
+    }
+  }
+
+  &__fieldset {
+    border: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    legend {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: $color-brown-warm;
+      margin-bottom: 1rem;
+      padding: 0;
+    }
+  }
+
+  &__form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+
+  &__submit {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+.enquiry-success {
+  @include card-surface;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 3rem);
+  text-align: center;
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $color-success;
+    background: rgba($color-success, 0.1);
+    border-radius: 50%;
+    border: 2px solid rgba($color-success, 0.25);
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  p {
+    line-height: 1.7;
+    color: $color-steel;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
+
+  .btn {
+    @include mobile {
+      width: 100%;
+    }
+  }
+}
+
+.page-hero--contact {
+  padding-bottom: clamp(2rem, 5vw, 3rem);
+}

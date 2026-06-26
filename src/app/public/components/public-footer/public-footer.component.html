@@ -1,0 +1,38 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <span class="footer__logo">Knowles Knives</span>
+        <p class="footer__tagline">
+          Thoughtfully forged, masterfully made. Handcrafted knives and bespoke blade work.
+        </p>
+      </div>
+
+      <div class="footer__links">
+        <h4>Explore</h4>
+        <a routerLink="/knives">Knives</a>
+        <a routerLink="/services">Services</a>
+        <a routerLink="/gallery">Gallery</a>
+        <a routerLink="/about">About</a>
+      </div>
+
+      <div class="footer__links">
+        <h4>Enquire</h4>
+        <a routerLink="/contact">Contact Us</a>
+        <a routerLink="/contact" [queryParams]="{ enquiryType: 'custom-knife' }">Custom Knife</a>
+        <a routerLink="/contact" [queryParams]="{ enquiryType: 'course' }">Courses</a>
+      </div>
+
+      <div class="footer__contact">
+        <h4>Workshop</h4>
+        <p>By appointment only</p>
+        <p>enquiries&#64;knowlesknives.co.uk</p>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>&copy; {{ year }} Knowles Knives. All rights reserved.</p>
+      <p class="footer__note">No online payments — enquire to confirm availability.</p>
+    </div>
+  </div>
+</footer>

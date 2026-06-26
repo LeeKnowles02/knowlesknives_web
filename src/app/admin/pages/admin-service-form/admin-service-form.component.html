@@ -1,0 +1,86 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+    <h1>{{ isEditMode ? 'Edit Service' : 'Add Service' }}</h1>
+    <p class="admin-page-header__desc">
+      {{
+        isEditMode
+          ? 'Update service details and visibility.'
+          : 'Add a new service to the public site.'
+      }}
+    </p>
+  </div>
+  <div class="admin-page-header__actions">
+    <a routerLink="/admin/services" class="admin-btn admin-btn--secondary">← Back to Services</a>
+  </div>
+</div>
+
+@if (loadError()) {
+  <div class="admin-alert admin-alert--error">{{ loadError() }}</div>
+}
+
+<form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="form-card">
+  <div class="form-grid">
+    <div class="form-group form-grid__full">
+      <label for="title">Title *</label>
+      <input id="title" type="text" formControlName="title" />
+      @if (isInvalid('title')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="enquiryType">Enquiry Type *</label>
+      <select id="enquiryType" formControlName="enquiryType">
+        @for (type of enquiryTypes; track type) {
+          <option [value]="type">{{ type }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group form-grid__full">
+      <label for="shortDescription">Short Description *</label>
+      <input id="shortDescription" type="text" formControlName="shortDescription" />
+      @if (isInvalid('shortDescription')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group form-grid__full">
+      <label for="description">Full Description *</label>
+      <textarea id="description" formControlName="description" rows="4"></textarea>
+      @if (isInvalid('description')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group form-grid__full">
+      <app-image-picker formControlName="imageUrl" label="Service Image" [required]="true" />
+      @if (isInvalid('imageUrl')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="active" />
+        Active (visible on public site)
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="featured" />
+        Featured
+      </label>
+    </div>
+  </div>
+
+  @if (submitError()) {
+    <p class="error">{{ submitError() }}</p>
+  }
+
+  <button type="submit" class="admin-btn admin-btn--primary">
+    {{ isEditMode ? 'Update Service' : 'Add Service' }}
+  </button>
+</form>

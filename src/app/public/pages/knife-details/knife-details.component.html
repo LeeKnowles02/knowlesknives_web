@@ -1,0 +1,96 @@
+@if (loading()) {
+  <div class="container page-state-wrap">
+    <p class="page-state">Loading knife…</p>
+  </div>
+} @else if (error()) {
+  <div class="container page-state-wrap">
+    <p class="page-state page-state--error">{{ error() }}</p>
+    <a routerLink="/knives" class="btn btn--primary">View All Knives</a>
+  </div>
+} @else if (notFound() || !knife()) {
+  <div class="container page-state-wrap">
+    <p class="page-state">Knife not found.</p>
+    <a routerLink="/knives" class="btn btn--primary">View All Knives</a>
+  </div>
+} @else {
+  @if (knife(); as knife) {
+    <section class="knife-detail">
+      <div class="container">
+        <a routerLink="/knives" class="knife-detail__back">&larr; Back to Knives</a>
+
+        <div class="knife-detail__grid">
+          <div class="knife-detail__gallery">
+            <div class="knife-detail__main-image">
+              @if (selectedImage) {
+                <img [src]="selectedImage" [alt]="knife.name" />
+              } @else {
+                <div class="knife-detail__placeholder">No image available</div>
+              }
+            </div>
+            @if (galleryImages.length > 1) {
+              <div class="knife-detail__thumbs">
+                @for (img of galleryImages; track img.imageUrl) {
+                  <button
+                    type="button"
+                    class="knife-detail__thumb"
+                    [class.knife-detail__thumb--active]="selectedImage === img.imageUrl"
+                    (click)="selectImage(img.imageUrl)"
+                  >
+                    <img [src]="img.imageUrl" [alt]="img.altText || knife.name" />
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="knife-detail__info">
+            <span class="badge badge--{{ knife.availability | availabilityBadge }}">
+              {{ knife.availability | availabilityLabel }}
+            </span>
+            <span class="knife-detail__category">{{ knife.category }}</span>
+            <h1 class="knife-detail__title">{{ knife.name }}</h1>
+            <p class="knife-detail__price">{{ knife.price | currencyZar }}</p>
+            <p class="knife-detail__desc">{{ knife.description }}</p>
+
+            <dl class="knife-detail__specs">
+              <div>
+                <dt>Steel Type</dt>
+                <dd>{{ knife.steelType }}</dd>
+              </div>
+              <div>
+                <dt>Handle Material</dt>
+                <dd>{{ knife.handleMaterial }}</dd>
+              </div>
+              <div>
+                <dt>Blade Length</dt>
+                <dd>{{ knife.bladeLength }}</dd>
+              </div>
+              <div>
+                <dt>Overall Length</dt>
+                <dd>{{ knife.overallLength }}</dd>
+              </div>
+            </dl>
+
+            @if (knife.notes) {
+              <p class="knife-detail__notes"><strong>Note:</strong> {{ knife.notes }}</p>
+            }
+
+            <div class="knife-detail__notice">
+              Online payments are not available because each knife may be sold, reserved, or custom
+              made. Send an enquiry and we will confirm availability.
+            </div>
+
+            <div class="knife-detail__cta">
+              <a
+                routerLink="/contact"
+                [queryParams]="{ knifeId: knife.id }"
+                class="btn btn--primary btn--full"
+                >Enquire About This Knife</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+}

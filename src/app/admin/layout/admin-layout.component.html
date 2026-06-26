@@ -1,0 +1,88 @@
+<div class="admin-shell">
+  <app-toast />
+  @if (sidebarOpen()) {
+    <button
+      type="button"
+      class="admin-backdrop"
+      aria-label="Close menu"
+      (click)="closeSidebar()"
+    ></button>
+  }
+
+  <aside class="admin-sidebar" [class.admin-sidebar--open]="sidebarOpen()">
+    <div class="admin-sidebar__brand">
+      <span class="admin-sidebar__mark">KK</span>
+      <span>Knowles Admin</span>
+    </div>
+
+    <nav class="admin-sidebar__nav">
+      <p class="admin-sidebar__section">Overview</p>
+      @for (item of overviewNav; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="admin-sidebar__link--active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+          class="admin-sidebar__link"
+          (click)="closeSidebar()"
+        >
+          <span class="admin-sidebar__icon">{{ item.icon }}</span>
+          {{ item.label }}
+        </a>
+      }
+
+      <p class="admin-sidebar__section">Catalogue</p>
+      @for (item of catalogueNav; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="admin-sidebar__link--active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+          class="admin-sidebar__link"
+          (click)="closeSidebar()"
+        >
+          <span class="admin-sidebar__icon">{{ item.icon }}</span>
+          {{ item.label }}
+        </a>
+      }
+
+      <p class="admin-sidebar__section">Content</p>
+      @for (item of contentNav; track item.path) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="admin-sidebar__link--active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+          class="admin-sidebar__link"
+          (click)="closeSidebar()"
+        >
+          <span class="admin-sidebar__icon">{{ item.icon }}</span>
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <a routerLink="/" class="admin-sidebar__footer" (click)="closeSidebar()">← Back to Site</a>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button type="button" class="admin-menu-btn" aria-label="Open menu" (click)="toggleSidebar()">
+        ☰
+      </button>
+      <span class="admin-topbar__title">Knowles Knives Admin</span>
+      <div class="admin-topbar__user">
+        @if (currentUser(); as user) {
+          <span class="admin-topbar__name">{{ user.name || user.email }}</span>
+        }
+        <button
+          type="button"
+          class="admin-btn admin-btn--secondary admin-btn--sm"
+          (click)="logout()"
+        >
+          Logout
+        </button>
+      </div>
+    </header>
+    <div class="admin-content">
+      <router-outlet />
+    </div>
+  </div>
+</div>

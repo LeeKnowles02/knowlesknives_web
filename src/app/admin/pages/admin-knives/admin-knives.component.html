@@ -1,0 +1,95 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+
+    <h1>Knives</h1>
+
+    <p class="admin-page-header__desc">Manage knife listings, availability, and product details.</p>
+  </div>
+
+  <div class="admin-page-header__actions">
+    <a routerLink="/admin/knives/new" class="admin-btn admin-btn--primary">Add Knife</a>
+  </div>
+</div>
+
+@if (loading() && knives().length === 0) {
+  <p class="page-state">Loading knives…</p>
+} @else if (error()) {
+  <p class="page-state page-state--error">{{ error() }}</p>
+} @else if (knives().length === 0) {
+  <p class="page-state">No knives found.</p>
+} @else {
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+
+          <th>Name</th>
+
+          <th>Category</th>
+
+          <th>Price</th>
+
+          <th>Availability</th>
+
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (knife of knives(); track knife.id) {
+          <tr [class.admin-table--inactive]="!knife.active">
+            <td>
+              @if (primaryImage(knife); as src) {
+                <img class="admin-thumb" [src]="src" [alt]="knife.name" />
+              } @else {
+                <span class="admin-thumb-placeholder">No img</span>
+              }
+            </td>
+
+            <td>
+              <span class="admin-table__name">{{ knife.name }}</span>
+            </td>
+
+            <td>{{ knife.category }}</td>
+
+            <td>{{ knife.price | currencyZar }}</td>
+
+            <td>
+              <span class="badge badge--{{ knife.availability | availabilityBadge }}">
+                {{ knife.availability | availabilityLabel }}
+              </span>
+            </td>
+
+            <td>
+              <div class="admin-table__actions">
+                <button
+                  type="button"
+                  class="admin-btn admin-btn--secondary admin-btn--sm"
+                  (click)="viewKnife(knife)"
+                >
+                  View
+                </button>
+
+                <a
+                  [routerLink]="['/admin/knives', knife.id, 'edit']"
+                  class="admin-btn admin-btn--secondary admin-btn--sm"
+                  >Edit</a
+                >
+
+                <button
+                  type="button"
+                  class="admin-btn admin-btn--danger admin-btn--sm"
+                  (click)="deleteKnife(knife.id, knife.name)"
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

@@ -1,0 +1,55 @@
+@use '../../../../styles/variables' as *;
+
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.service-detail {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2.5rem;
+  align-items: start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__image {
+    border-radius: $radius-md;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    box-shadow: $shadow-md;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__content {
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+
+    > p {
+      line-height: 1.7;
+      color: $color-charcoal;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  &:nth-child(even) {
+    .service-detail__image {
+      order: 2;
+    }
+
+    @media (max-width: 768px) {
+      .service-detail__image {
+        order: 0;
+      }
+    }
+  }
+}

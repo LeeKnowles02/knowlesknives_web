@@ -1,0 +1,50 @@
+<header class="header" [class.header--menu-open]="menuOpen()">
+  <div class="header__inner container">
+    <a routerLink="/" class="header__logo" (click)="closeMenu()">
+      <img
+        class="header__logo-image"
+        src="assets/images/knowles-knives-logo.png"
+        alt="Knowles Knives"
+        width="42"
+        height="42"
+      />
+      <span class="header__logo-text">Knowles Knives</span>
+    </a>
+
+    <button
+      class="header__toggle"
+      type="button"
+      [class.header__toggle--open]="menuOpen()"
+      [attr.aria-expanded]="menuOpen()"
+      aria-label="Toggle navigation"
+      (click)="toggleMenu()"
+    >
+      <span class="header__toggle-bar"></span>
+      <span class="header__toggle-bar"></span>
+      <span class="header__toggle-bar"></span>
+    </button>
+
+    @if (menuOpen()) {
+      <button
+        type="button"
+        class="header__backdrop"
+        aria-label="Close menu"
+        (click)="closeMenu()"
+      ></button>
+    }
+
+    <nav class="header__nav" [class.header__nav--open]="menuOpen()">
+      @for (link of navLinks; track link.path) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="header__link--active"
+          [routerLinkActiveOptions]="{ exact: link.exact }"
+          class="header__link"
+          (click)="closeMenu()"
+          >{{ link.label }}</a
+        >
+      }
+      <a routerLink="/contact" class="header__cta" (click)="closeMenu()">Send Enquiry</a>
+    </nav>
+  </div>
+</header>

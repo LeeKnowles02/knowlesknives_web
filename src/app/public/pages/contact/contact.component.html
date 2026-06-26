@@ -1,0 +1,175 @@
+<div class="page-hero page-hero--contact">
+  <div class="container">
+    <h1 class="page-hero__title">{{ pageTitle() }}</h1>
+    <p class="page-hero__subtitle">
+      No online payments — tell us what you're looking for and we'll respond personally to confirm
+      availability.
+    </p>
+  </div>
+</div>
+
+<section class="section section--cream contact">
+  <div class="container">
+    @if (showSuccess) {
+      <div class="enquiry-success">
+        <div class="enquiry-success__icon" aria-hidden="true">✓</div>
+        <h2>Enquiry Received</h2>
+        <p>
+          Thank you. Your enquiry has been received. Knowles Knives will contact you to confirm
+          details and availability.
+        </p>
+        <button type="button" class="btn btn--outline-dark" (click)="sendAnother()">
+          Send Another Enquiry
+        </button>
+      </div>
+    } @else {
+      <div class="contact__grid" [class.contact__grid--compact]="mode() !== 'general'">
+        @if (mode() === 'general') {
+          <aside class="contact__info">
+            <h2>How It Works</h2>
+            <ol class="contact__steps">
+              <li><strong>Send your enquiry</strong> — tell us what you're looking for.</li>
+              <li>
+                <strong>We review availability</strong> — each piece may be available, reserved, or
+                made to order.
+              </li>
+              <li>
+                <strong>We contact you</strong> — personally, to confirm pricing, timing, and next
+                steps.
+              </li>
+            </ol>
+            <div class="contact__cards">
+              <div class="contact__card">
+                <span class="contact__card-label">Email</span>
+                <span>enquiries&#64;knowlesknives.co.uk</span>
+              </div>
+              <div class="contact__card">
+                <span class="contact__card-label">Workshop</span>
+                <span>By appointment only</span>
+              </div>
+            </div>
+            <p class="contact__note">
+              We never take payment through this website. All purchases are confirmed by direct
+              enquiry.
+            </p>
+          </aside>
+        }
+
+        <div class="contact__form-wrap">
+          <div class="contact__form-header">
+            <h3>Your Enquiry</h3>
+            <p>Fields marked with * are required.</p>
+          </div>
+
+          <form [formGroup]="enquiryForm" (ngSubmit)="onSubmit()" class="contact__form" novalidate>
+            @if (mode() === 'knife' && preselectedKnife(); as knife) {
+              <div class="contact__readonly">
+                <span class="contact__readonly-label">Selected Knife</span>
+                <span class="contact__readonly-value">{{ knife.name }}</span>
+              </div>
+            }
+
+            @if (mode() === 'service' && preselectedService(); as service) {
+              <div class="contact__readonly">
+                <span class="contact__readonly-label">Service</span>
+                <span class="contact__readonly-value">{{ service.title }}</span>
+              </div>
+            }
+
+            <fieldset class="contact__fieldset">
+              <legend>Your Details</legend>
+
+              <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input
+                  id="name"
+                  type="text"
+                  formControlName="name"
+                  autocomplete="name"
+                  placeholder="Your name"
+                />
+                @if (isInvalid('name')) {
+                  <span class="error">Please enter your name.</span>
+                }
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email Address *</label>
+                  <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    autocomplete="email"
+                    placeholder="you@email.com"
+                  />
+                  @if (isInvalid('email')) {
+                    <span class="error">Please enter a valid email.</span>
+                  }
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone Number *</label>
+                  <input
+                    id="phone"
+                    type="tel"
+                    formControlName="phone"
+                    autocomplete="tel"
+                    placeholder="Your phone number"
+                  />
+                  @if (isInvalid('phone')) {
+                    <span class="error">Please enter your phone number.</span>
+                  }
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="contact__fieldset">
+              <legend>Your Enquiry</legend>
+
+              @if (mode() === 'general') {
+                <div class="form-group">
+                  <label for="enquiryType">Enquiry Type *</label>
+                  <select id="enquiryType" formControlName="enquiryType">
+                    @for (type of generalEnquiryOptions; track type) {
+                      <option [value]="type">{{ type }}</option>
+                    }
+                  </select>
+                </div>
+              } @else {
+                <div class="contact__readonly">
+                  <span class="contact__readonly-label">Enquiry Type</span>
+                  <span class="contact__readonly-value">{{ fixedEnquiryTypeLabel() }}</span>
+                </div>
+              }
+
+              <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea
+                  id="message"
+                  formControlName="message"
+                  rows="5"
+                  [attr.placeholder]="messagePlaceholder()"
+                ></textarea>
+                @if (isInvalid('message')) {
+                  <span class="error">Please enter a message (at least 10 characters).</span>
+                }
+              </div>
+            </fieldset>
+
+            @if (submitError()) {
+              <p class="error contact__submit-error">{{ submitError() }}</p>
+            }
+
+            <button
+              type="submit"
+              class="btn btn--primary btn--full contact__submit"
+              [disabled]="submitting()"
+            >
+              {{ submitting() ? 'Sending…' : 'Send Enquiry' }}
+            </button>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+</section>

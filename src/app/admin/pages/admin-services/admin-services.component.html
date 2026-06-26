@@ -1,0 +1,101 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+
+    <h1>Services</h1>
+
+    <p class="admin-page-header__desc">Manage services offered and their enquiry types.</p>
+  </div>
+
+  <div class="admin-page-header__actions">
+    <a routerLink="/admin/services/new" class="admin-btn admin-btn--primary">Add Service</a>
+  </div>
+</div>
+
+@if (loading() && services().length === 0) {
+  <p class="page-state">Loading services…</p>
+} @else if (error()) {
+  <p class="page-state page-state--error">{{ error() }}</p>
+} @else if (services().length === 0) {
+  <p class="page-state">No services found.</p>
+} @else {
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+
+          <th>Title</th>
+
+          <th>Enquiry Type</th>
+
+          <th>Status</th>
+
+          <th>Featured</th>
+
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (service of services(); track service.id) {
+          <tr [class.admin-table--inactive]="!service.active">
+            <td>
+              <img class="admin-thumb" [src]="service.imageUrl" [alt]="service.title" />
+            </td>
+
+            <td>
+              <span class="admin-table__name">{{ service.title }}</span>
+            </td>
+
+            <td>{{ service.enquiryType }}</td>
+
+            <td>
+              <span
+                class="admin-badge"
+                [class.admin-badge--active]="service.active"
+                [class.admin-badge--inactive]="!service.active"
+              >
+                {{ service.active ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+
+            <td>
+              @if (service.featured) {
+                <span class="admin-badge admin-badge--featured">Yes</span>
+              } @else {
+                <span class="admin-muted-text">—</span>
+              }
+            </td>
+
+            <td>
+              <div class="admin-table__actions">
+                <a
+                  [routerLink]="['/admin/services', service.id, 'edit']"
+                  class="admin-btn admin-btn--secondary admin-btn--sm"
+                  >Edit</a
+                >
+
+                <button
+                  type="button"
+                  class="admin-btn admin-btn--secondary admin-btn--sm"
+                  (click)="toggleActive(service.id, service.title, service.active)"
+                >
+                  {{ service.active ? 'Deactivate' : 'Activate' }}
+                </button>
+
+                <button
+                  type="button"
+                  class="admin-btn admin-btn--danger admin-btn--sm"
+                  (click)="delete(service.id, service.title)"
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

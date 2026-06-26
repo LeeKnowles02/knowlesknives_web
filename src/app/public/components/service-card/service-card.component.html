@@ -1,0 +1,15 @@
+<article class="service-card">
+  <div class="service-card__image">
+    <img [src]="service.imageUrl" [alt]="service.title" loading="lazy" />
+  </div>
+  <div class="service-card__body">
+    <h3 class="service-card__title">{{ service.title }}</h3>
+    <p class="service-card__desc">{{ service.shortDescription }}</p>
+    <a
+      routerLink="/contact"
+      [queryParams]="{ serviceId: service.id }"
+      class="btn btn--primary btn--small"
+      >Enquire</a
+    >
+  </div>
+</article>

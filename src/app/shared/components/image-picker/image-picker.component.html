@@ -1,0 +1,90 @@
+<div class="image-picker">
+  <span class="image-picker__label">
+    {{ label }}
+    @if (required) {
+      <span class="image-picker__required"> *</span>
+    }
+  </span>
+
+  @if (previewUrl) {
+    <div
+      class="image-picker__preview"
+      [class.image-picker__preview--panning]="isPanning()"
+      (pointerdown)="onPanStart($event)"
+      (pointermove)="onPanMove($event)"
+      (pointerup)="onPanEnd($event)"
+      (pointercancel)="onPanEnd($event)"
+    >
+      <img
+        [src]="previewUrl"
+        [alt]="label"
+        [style.object-position]="objectPosition"
+        draggable="false"
+      />
+      <span class="image-picker__preview-hint">Drag to reposition</span>
+    </div>
+  }
+
+  <div class="image-picker__actions">
+    <label
+      class="admin-btn admin-btn--secondary admin-btn--sm image-picker__choose"
+      [class.image-picker__choose--disabled]="disabled || uploading()"
+    >
+      @if (uploading()) {
+        Saving…
+      } @else if (previewUrl) {
+        Replace image
+      } @else {
+        Choose from device
+      }
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        (change)="onFileSelected($event)"
+        [disabled]="disabled || uploading()"
+        hidden
+      />
+    </label>
+
+    @if (previewUrl && !uploading()) {
+      <button
+        type="button"
+        class="admin-btn admin-btn--secondary admin-btn--sm"
+        (click)="resetPosition()"
+        [disabled]="disabled"
+      >
+        Centre
+      </button>
+    }
+
+    @if (previewUrl && framingDirty() && !uploading()) {
+      <button
+        type="button"
+        class="admin-btn admin-btn--primary admin-btn--sm"
+        (click)="saveFraming()"
+        [disabled]="disabled"
+      >
+        {{ pendingFile ? 'Save image' : 'Apply framing' }}
+      </button>
+    }
+
+    @if (previewUrl && !uploading()) {
+      <button
+        type="button"
+        class="admin-btn admin-btn--secondary admin-btn--sm"
+        (click)="clear()"
+        [disabled]="disabled"
+      >
+        Remove
+      </button>
+    }
+  </div>
+
+  <p class="image-picker__hint">
+    JPEG, PNG, WebP or GIF — max 5 MB. Drag the preview to frame the shot, then save.
+  </p>
+
+  @if (error()) {
+    <span class="error">{{ error() }}</span>
+  }
+</div>

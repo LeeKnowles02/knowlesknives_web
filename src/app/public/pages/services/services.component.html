@@ -1,0 +1,45 @@
+<div class="page-hero">
+  <div class="container">
+    <h1 class="page-hero__title">Our Services</h1>
+
+    <p class="page-hero__subtitle">
+      Custom craftsmanship, courses, engraving, and blade care — enquire for details and
+      availability.
+    </p>
+  </div>
+</div>
+
+<section class="section section--cream">
+  <div class="container">
+    @if (loading()) {
+      <p class="page-state">Loading services…</p>
+    } @else if (error()) {
+      <p class="page-state page-state--error">{{ error() }}</p>
+    } @else if (services().length === 0) {
+      <p class="page-state">No services found.</p>
+    } @else {
+      <div class="services-list">
+        @for (service of services(); track service.id) {
+          <article class="service-detail">
+            <div class="service-detail__image">
+              <img [src]="service.imageUrl" [alt]="service.title" />
+            </div>
+
+            <div class="service-detail__content">
+              <h2>{{ service.title }}</h2>
+
+              <p>{{ service.description }}</p>
+
+              <a
+                routerLink="/contact"
+                [queryParams]="{ serviceId: service.id }"
+                class="btn btn--primary"
+                >Enquire</a
+              >
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>

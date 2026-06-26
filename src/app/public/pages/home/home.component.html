@@ -1,0 +1,124 @@
+<section class="hero">
+  <div class="hero__bg">
+    <img src="assets/images/knife-hero.svg" alt="" class="hero__bg-img" />
+    <div class="hero__overlay"></div>
+    <div class="hero__vignette"></div>
+  </div>
+
+  <div class="hero__content container">
+    <p class="hero__eyebrow">Est. Handcrafted Blade Work</p>
+    <h1 class="hero__title">
+      <span>Thoughtfully Forged,</span>
+      <span class="hero__title-accent">Masterfully Made</span>
+    </h1>
+    <p class="hero__text">
+      Each Knowles knife is individually crafted with precision, passion, and purpose. From hunting
+      blades to chef's knives and bespoke commissions — blades built to be used, admired, and passed
+      down.
+    </p>
+    <div class="hero__actions">
+      <a routerLink="/knives" class="btn btn--primary">View Knives</a>
+      <a routerLink="/services" class="btn btn--outline">Explore Services</a>
+    </div>
+    <ul class="hero__trust" aria-label="Brand highlights">
+      <li>Hand-Forged Steel</li>
+      <li>Custom Commissions</li>
+      <li>Enquire to Purchase</li>
+    </ul>
+  </div>
+
+  <a href="#featured" class="hero__scroll" aria-label="Scroll to featured knives">
+    <span>Explore</span>
+    <span class="hero__scroll-line"></span>
+  </a>
+</section>
+
+<section class="craft-strip">
+  <div class="container craft-strip__inner">
+    <p>Every blade begins with fire, steel, and intention — finished by hand in our workshop.</p>
+  </div>
+</section>
+
+<section id="featured" class="section section--cream">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-header__label">Featured Blades</span>
+      <h2 class="section-header__title">Knives Worth Knowing</h2>
+      <p class="section-header__subtitle">
+        A curated selection of our finest work — enquire for availability and lead times.
+      </p>
+    </div>
+    <div class="grid grid--3">
+      @if (knivesLoading()) {
+        <p class="page-state">Loading knives…</p>
+      } @else if (knivesError()) {
+        <p class="page-state page-state--error">{{ knivesError() }}</p>
+      } @else if (featuredKnives().length === 0) {
+        <p class="page-state">No featured knives found.</p>
+      } @else {
+        @for (knife of featuredKnives(); track knife.id) {
+          <app-knife-card [knife]="knife" />
+        }
+      }
+    </div>
+    <div class="section-cta">
+      <a routerLink="/knives" class="btn btn--outline-dark">View All Knives</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-header__label">What We Offer</span>
+      <h2 class="section-header__title">Services &amp; Craft</h2>
+      <p class="section-header__subtitle">
+        From custom commissions to courses and engraving — we bring your vision to steel.
+      </p>
+    </div>
+    <div class="grid grid--2">
+      @if (servicesLoading()) {
+        <p class="page-state">Loading services…</p>
+      } @else if (servicesError()) {
+        <p class="page-state page-state--error">{{ servicesError() }}</p>
+      } @else if (services().length === 0) {
+        <p class="page-state">No services found.</p>
+      } @else {
+        @for (service of services(); track service.id) {
+          <app-service-card [service]="service" />
+        }
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section section--brown">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-header__label">From the Workshop</span>
+      <h2 class="section-header__title">Gallery</h2>
+    </div>
+    <div class="gallery-preview">
+      @for (item of galleryPreview(); track item.id) {
+        <div class="gallery-preview__item">
+          <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+        </div>
+      }
+    </div>
+    <div class="section-cta">
+      <a routerLink="/gallery" class="btn btn--outline">View Full Gallery</a>
+    </div>
+  </div>
+</section>
+
+<section class="section cta-section">
+  <div class="container cta-section__inner">
+    <div class="divider-ornament cta-section__ornament">Begin Your Enquiry</div>
+    <h2>Ready to Own a Piece of the Craft?</h2>
+    <p>
+      Every knife is unique. Send us an enquiry and we'll confirm availability, pricing, and lead
+      times personally.
+    </p>
+    <a routerLink="/contact" class="btn btn--primary">Get in Touch</a>
+  </div>
+</section>

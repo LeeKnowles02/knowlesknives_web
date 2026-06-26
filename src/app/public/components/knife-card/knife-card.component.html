@@ -1,0 +1,31 @@
+<article class="knife-card">
+  <a [routerLink]="['/knives', knife.slug]" class="knife-card__image-link">
+    <div class="knife-card__image">
+      @if (primaryImage; as src) {
+        <img [src]="src" [alt]="knife.name" loading="lazy" />
+      } @else {
+        <div class="knife-card__placeholder">No image available</div>
+      }
+      <div class="knife-card__image-shade"></div>
+      <span class="badge badge--{{ knife.availability | availabilityBadge }} knife-card__badge">
+        {{ knife.availability | availabilityLabel }}
+      </span>
+    </div>
+  </a>
+
+  <div class="knife-card__body">
+    <span class="knife-card__category">{{ knife.category }}</span>
+    <h3 class="knife-card__title">
+      <a [routerLink]="['/knives', knife.slug]">{{ knife.name }}</a>
+    </h3>
+    <p class="knife-card__desc">{{ knife.shortDescription }}</p>
+    <div class="knife-card__footer">
+      <span class="knife-card__price">{{ knife.price | currencyZar }}</span>
+      <a
+        [routerLink]="['/knives', knife.slug]"
+        class="btn btn--outline-dark btn--small knife-card__btn"
+        >View Details</a
+      >
+    </div>
+  </div>
+</article>

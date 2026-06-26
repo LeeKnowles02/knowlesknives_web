@@ -1,0 +1,89 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.footer {
+  background-color: $color-black;
+  color: rgba($color-cream, 0.72);
+  padding: clamp(3rem, 8vw, 4.5rem) 0 clamp(1.5rem, 4vw, 2rem);
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: $bp-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__logo {
+    font-family: $font-heading;
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: $color-cream;
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  &__tagline {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    max-width: 300px;
+    opacity: 0.85;
+  }
+
+  h4 {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $color-brown-light;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  &__links a {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    transition: color $transition;
+
+    &:hover {
+      color: $color-cream;
+    }
+  }
+
+  &__contact p {
+    font-size: 0.9rem;
+    margin: 0 0 0.35rem;
+    line-height: 1.5;
+  }
+
+  &__bottom {
+    padding-top: clamp(1.5rem, 4vw, 2rem);
+    border-top: 1px solid rgba($color-cream, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.78rem;
+    opacity: 0.65;
+  }
+
+  &__note {
+    text-align: right;
+
+    @media (max-width: $bp-md) {
+      text-align: left;
+      width: 100%;
+    }
+  }
+}

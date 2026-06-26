@@ -1,0 +1,209 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: rgba($color-black, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba($color-cream, 0.06);
+  height: $header-height;
+  transition: background-color $transition;
+
+  &--menu-open {
+    background-color: rgba($color-black, 0.96);
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: $color-cream;
+    z-index: 1002;
+
+    &:hover {
+      opacity: 0.92;
+    }
+  }
+
+  &__logo-image {
+    display: block;
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  &__logo-text {
+    font-family: $font-heading;
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+
+    @media (max-width: $bp-sm) {
+      font-size: 1.05rem;
+    }
+  }
+
+  &__toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    @include touch-target;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    z-index: 1002;
+    position: relative;
+
+    &--open .header__toggle-bar:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    &--open .header__toggle-bar:nth-child(2) {
+      opacity: 0;
+    }
+
+    &--open .header__toggle-bar:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+
+  &__toggle-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: $color-cream;
+    transition:
+      transform $transition,
+      opacity $transition;
+    border-radius: 1px;
+  }
+
+  &__backdrop {
+    display: none;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  &__link {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba($color-cream, 0.65);
+    transition: color $transition;
+    position: relative;
+    padding: 0.35rem 0;
+
+    &:hover,
+    &--active {
+      color: $color-cream;
+    }
+
+    &--active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: $color-brown-light;
+    }
+  }
+
+  &__cta {
+    display: none;
+  }
+
+  @media (max-width: $bp-md) {
+    &__toggle {
+      display: flex;
+    }
+
+    &__backdrop {
+      display: block;
+      position: fixed;
+      inset: $header-height 0 0 0;
+      background: rgba($color-black, 0.6);
+      border: none;
+      z-index: 1000;
+      cursor: pointer;
+    }
+
+    &__nav {
+      position: fixed;
+      top: $header-height;
+      right: 0;
+      bottom: 0;
+      width: min(320px, 88vw);
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 1.5rem;
+      gap: 0;
+      background-color: $color-charcoal;
+      border-left: 1px solid rgba($color-cream, 0.08);
+      transform: translateX(100%);
+      transition: transform $transition;
+      z-index: 1001;
+      overflow-y: auto;
+
+      &--open {
+        transform: translateX(0);
+      }
+    }
+
+    &__link {
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba($color-cream, 0.06);
+      min-height: $tap-min;
+      display: flex;
+      align-items: center;
+
+      &--active::after {
+        display: none;
+      }
+
+      &--active {
+        color: $color-brown-light;
+      }
+    }
+
+    &__cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.5rem;
+      min-height: $tap-min;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, $color-brown-warm, $color-brown);
+      color: $color-cream;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: $radius-sm;
+    }
+  }
+}

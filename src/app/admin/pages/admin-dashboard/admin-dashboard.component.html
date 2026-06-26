@@ -1,0 +1,55 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+    <h1>Dashboard</h1>
+    <p class="admin-page-header__desc">Overview of inventory, services, and enquiries.</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <p class="page-state">Loading dashboard…</p>
+} @else if (error()) {
+  <p class="page-state page-state--error">{{ error() }}</p>
+} @else {
+  @if (stats(); as stats) {
+    <div class="dashboard-stats">
+      <div class="stat-card stat-card--primary">
+        <span class="stat-card__icon">⚔</span>
+        <span class="stat-card__value">{{ stats.totalKnives }}</span>
+        <span class="stat-card__label">Total Knives</span>
+        <span class="stat-card__hint">In catalogue</span>
+      </div>
+      <div class="stat-card stat-card--success">
+        <span class="stat-card__icon">✓</span>
+        <span class="stat-card__value">{{ stats.availableKnives }}</span>
+        <span class="stat-card__label">Available Knives</span>
+        <span class="stat-card__hint">Ready to enquire</span>
+      </div>
+      <div class="stat-card stat-card--muted">
+        <span class="stat-card__icon">○</span>
+        <span class="stat-card__value">{{ stats.soldKnives }}</span>
+        <span class="stat-card__label">Sold Knives</span>
+        <span class="stat-card__hint">Marked as sold</span>
+      </div>
+      <div class="stat-card stat-card--warning">
+        <span class="stat-card__icon">✉</span>
+        <span class="stat-card__value">{{ stats.pendingEnquiries }}</span>
+        <span class="stat-card__label">Pending Enquiries</span>
+        <span class="stat-card__hint">Awaiting response</span>
+      </div>
+      <div class="stat-card stat-card--primary">
+        <span class="stat-card__icon">⚙</span>
+        <span class="stat-card__value">{{ stats.activeServices }}</span>
+        <span class="stat-card__label">Active Services</span>
+        <span class="stat-card__hint">On public site</span>
+      </div>
+    </div>
+  }
+}
+
+<div class="dashboard-actions">
+  <p class="dashboard-actions__title">Quick Actions</p>
+  <a routerLink="/admin/knives/new" class="admin-btn admin-btn--primary">Add New Knife</a>
+  <a routerLink="/admin/enquiries" class="admin-btn admin-btn--secondary">View Enquiries</a>
+  <a routerLink="/admin/services/new" class="admin-btn admin-btn--secondary">Add Service</a>
+</div>

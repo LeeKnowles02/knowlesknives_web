@@ -1,0 +1,143 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+    <h1>{{ isEditMode ? 'Edit Knife' : 'Add Knife' }}</h1>
+    <p class="admin-page-header__desc">
+      {{
+        isEditMode
+          ? 'Update knife details, images, and availability.'
+          : 'Add a new knife to the catalogue.'
+      }}
+    </p>
+  </div>
+  <div class="admin-page-header__actions">
+    <a routerLink="/admin/knives" class="admin-btn admin-btn--secondary">← Back to Knives</a>
+  </div>
+</div>
+
+@if (loadError()) {
+  <div class="admin-alert admin-alert--error">{{ loadError() }}</div>
+}
+
+<form [formGroup]="knifeForm" (ngSubmit)="onSubmit()" class="form-card">
+  <div class="form-grid">
+    <div class="form-group">
+      <label for="name">Name *</label>
+      <input id="name" type="text" formControlName="name" />
+      @if (isInvalid('name')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category *</label>
+      <select id="category" formControlName="category">
+        @for (cat of categories; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price (R)</label>
+      <input id="price" type="number" formControlName="price" />
+    </div>
+
+    <div class="form-group">
+      <label for="availability">Availability *</label>
+      <select id="availability" formControlName="availability">
+        @for (avail of availabilities; track avail) {
+          <option [value]="avail">{{ avail }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group form-grid__full">
+      <label for="shortDescription">Short Description *</label>
+      <input id="shortDescription" type="text" formControlName="shortDescription" />
+      @if (isInvalid('shortDescription')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group form-grid__full">
+      <label for="description">Full Description *</label>
+      <textarea id="description" formControlName="description" rows="4"></textarea>
+      @if (isInvalid('description')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="steelType">Steel Type *</label>
+      <input id="steelType" type="text" formControlName="steelType" />
+      @if (isInvalid('steelType')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="handleMaterial">Handle Material *</label>
+      <input id="handleMaterial" type="text" formControlName="handleMaterial" />
+      @if (isInvalid('handleMaterial')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="bladeLength">Blade Length *</label>
+      <input id="bladeLength" type="text" formControlName="bladeLength" />
+      @if (isInvalid('bladeLength')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="overallLength">Overall Length *</label>
+      <input id="overallLength" type="text" formControlName="overallLength" />
+      @if (isInvalid('overallLength')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-grid__full">
+      <p class="form-hint">
+        Up to 4 images. Image 1 is the primary display photo (used on cards and listings).
+      </p>
+      <app-image-picker formControlName="image1" label="Image 1 — Primary" [required]="true" />
+      @if (isInvalid('image1')) {
+        <span class="error">Required</span>
+      }
+      <app-image-picker formControlName="image2" label="Image 2 — Optional" />
+      <app-image-picker formControlName="image3" label="Image 3 — Optional" />
+      <app-image-picker formControlName="image4" label="Image 4 — Optional" />
+    </div>
+
+    <div class="form-group form-grid__full">
+      <label for="notes">Notes</label>
+      <textarea id="notes" formControlName="notes" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="featured" />
+        Featured on homepage
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="active" />
+        Active (visible on public site)
+      </label>
+    </div>
+  </div>
+
+  @if (submitError()) {
+    <p class="error">{{ submitError() }}</p>
+  }
+
+  <button type="submit" class="admin-btn admin-btn--primary" [disabled]="loading()">
+    {{ isEditMode ? 'Update Knife' : 'Add Knife' }}
+  </button>
+</form>

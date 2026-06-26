@@ -1,0 +1,67 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+
+    <h1>Enquiries</h1>
+
+    <p class="admin-page-header__desc">Manage customer enquiries and update their status.</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <p class="page-state">Loading enquiries…</p>
+} @else if (error()) {
+  <p class="page-state page-state--error">{{ error() }}</p>
+} @else if (enquiries().length === 0) {
+  <p class="page-state">No enquiries found.</p>
+} @else {
+  <div class="enquiries-list">
+    @for (enquiry of enquiries(); track enquiry.id) {
+      <article class="enquiry-card">
+        <div class="enquiry-card__header">
+          <div>
+            <strong>{{ enquiry.name }}</strong>
+
+            <span class="enquiry-card__meta">{{ enquiry.email }} · {{ enquiry.phone }}</span>
+          </div>
+
+          <span class="badge badge--{{ statusBadgeClass(enquiry.status) }}">{{
+            enquiry.status
+          }}</span>
+        </div>
+
+        <div class="enquiry-card__body">
+          <p><strong>Type:</strong> {{ enquiry.enquiryType }}</p>
+
+          @if (knifeName(enquiry); as name) {
+            <p><strong>Knife:</strong> {{ name }}</p>
+          }
+
+          @if (serviceName(enquiry); as name) {
+            <p><strong>Service:</strong> {{ name }}</p>
+          }
+
+          <p class="enquiry-card__message">{{ enquiry.message }}</p>
+
+          <p class="enquiry-card__date">
+            {{ enquiry.createdAt | date: 'medium' }}
+          </p>
+        </div>
+
+        <div class="enquiry-card__actions">
+          <label for="status-{{ enquiry.id }}">Update Status</label>
+
+          <select
+            id="status-{{ enquiry.id }}"
+            [value]="enquiry.status"
+            (change)="updateStatus(enquiry.id, $any($event.target).value)"
+          >
+            @for (status of statusOptions; track status) {
+              <option [value]="status">{{ status }}</option>
+            }
+          </select>
+        </div>
+      </article>
+    }
+  </div>
+}

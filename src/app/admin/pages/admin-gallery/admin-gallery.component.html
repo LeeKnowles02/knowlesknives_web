@@ -1,0 +1,71 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+    <h1>Gallery</h1>
+    <p class="admin-page-header__desc">Manage images shown on the public gallery page.</p>
+  </div>
+  <div class="admin-page-header__actions">
+    <a routerLink="/admin/gallery/new" class="admin-btn admin-btn--primary">Add Gallery Item</a>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of items$ | async; track item.id) {
+        <tr [class.admin-table--inactive]="!item.active">
+          <td>
+            <img class="admin-thumb" [src]="item.imageUrl" [alt]="item.title" />
+          </td>
+          <td>
+            <span class="admin-table__name">{{ item.title }}</span>
+          </td>
+          <td>{{ item.category }}</td>
+          <td>
+            <span
+              class="admin-badge"
+              [class.admin-badge--active]="item.active"
+              [class.admin-badge--inactive]="!item.active"
+            >
+              {{ item.active ? 'Active' : 'Hidden' }}
+            </span>
+          </td>
+          <td>
+            <div class="admin-table__actions">
+              <a
+                [routerLink]="['/admin/gallery', item.id, 'edit']"
+                class="admin-btn admin-btn--secondary admin-btn--sm"
+                >Edit</a
+              >
+              @if (item.active) {
+                <button
+                  type="button"
+                  class="admin-btn admin-btn--secondary admin-btn--sm"
+                  (click)="deactivate(item.id, item.title)"
+                >
+                  Hide
+                </button>
+              }
+              <button
+                type="button"
+                class="admin-btn admin-btn--danger admin-btn--sm"
+                (click)="delete(item.id, item.title)"
+              >
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,55 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+    <h1>{{ isEditMode ? 'Edit Gallery Item' : 'Add Gallery Item' }}</h1>
+    <p class="admin-page-header__desc">
+      {{
+        isEditMode
+          ? 'Update image, title, and visibility on the public gallery.'
+          : 'Add a new image to the public gallery.'
+      }}
+    </p>
+  </div>
+  <div class="admin-page-header__actions">
+    <a routerLink="/admin/gallery" class="admin-btn admin-btn--secondary">← Back to Gallery</a>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-card">
+  <div class="form-grid">
+    <div class="form-group form-grid__full">
+      <label for="title">Title *</label>
+      <input id="title" type="text" formControlName="title" placeholder="e.g. Fieldmaster Hunter" />
+      @if (isInvalid('title')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group form-grid__full">
+      <app-image-picker formControlName="imageUrl" label="Gallery Image" [required]="true" />
+      @if (isInvalid('imageUrl')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category *</label>
+      <select id="category" formControlName="category">
+        @for (cat of categories; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="active" />
+        Active (visible on public gallery)
+      </label>
+    </div>
+  </div>
+
+  <button type="submit" class="admin-btn admin-btn--primary">
+    {{ isEditMode ? 'Update Item' : 'Add to Gallery' }}
+  </button>
+</form>

@@ -1,0 +1,38 @@
+@use 'variables' as *;
+
+@mixin mobile {
+  @media (max-width: #{$bp-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $bp-md) and (max-width: #{$bp-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $bp-lg) {
+    @content;
+  }
+}
+
+@mixin touch-target {
+  min-height: $tap-min;
+  min-width: $tap-min;
+}
+
+@mixin heading-display {
+  font-family: $font-heading;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.08;
+}
+
+@mixin card-surface {
+  background: $color-white;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  border: 1px solid rgba($color-cream-dark, 0.8);
+}

@@ -1,0 +1,21 @@
+<div class="page-hero">
+  <div class="container">
+    <h1 class="page-hero__title">Gallery</h1>
+    <p class="page-hero__subtitle">
+      A glimpse into the workshop — knives, engravings, and craft in progress.
+    </p>
+  </div>
+</div>
+
+<section class="section gallery-section">
+  <div class="container">
+    <div class="masonry">
+      @for (item of items$ | async; track item.id; let i = $index) {
+        <figure class="masonry__item" [class.masonry__item--tall]="i % 3 === 0">
+          <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+          <figcaption>{{ item.title }}</figcaption>
+        </figure>
+      }
+    </div>
+  </div>
+</section>
