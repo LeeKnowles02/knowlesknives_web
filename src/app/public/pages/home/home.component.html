@@ -1,6 +1,11 @@
 <section class="hero">
   <div class="hero__bg">
-    <img src="assets/images/knife-hero.svg" alt="" class="hero__bg-img" />
+    <img
+      src="assets/images/knife-hero.png"
+      alt=""
+      class="hero__bg-img"
+      fetchpriority="high"
+    />
     <div class="hero__overlay"></div>
     <div class="hero__vignette"></div>
   </div>
@@ -98,13 +103,19 @@
       <span class="section-header__label">From the Workshop</span>
       <h2 class="section-header__title">Gallery</h2>
     </div>
-    <div class="gallery-preview">
-      @for (item of galleryPreview(); track item.id) {
-        <div class="gallery-preview__item">
-          <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
-        </div>
-      }
-    </div>
+    @if (galleryLoading()) {
+      <p class="loading-message">Loading gallery…</p>
+    } @else if (galleryError()) {
+      <p class="error-message">{{ galleryError() }}</p>
+    } @else {
+      <div class="gallery-preview">
+        @for (item of galleryPreview(); track item.id) {
+          <div class="gallery-preview__item">
+            <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+          </div>
+        }
+      </div>
+    }
     <div class="section-cta">
       <a routerLink="/gallery" class="btn btn--outline">View Full Gallery</a>
     </div>

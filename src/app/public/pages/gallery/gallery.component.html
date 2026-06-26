@@ -9,13 +9,21 @@
 
 <section class="section gallery-section">
   <div class="container">
-    <div class="masonry">
-      @for (item of items$ | async; track item.id; let i = $index) {
-        <figure class="masonry__item" [class.masonry__item--tall]="i % 3 === 0">
-          <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
-          <figcaption>{{ item.title }}</figcaption>
-        </figure>
-      }
-    </div>
+    @if (loading()) {
+      <p class="loading-message">Loading gallery…</p>
+    } @else if (error()) {
+      <p class="error-message">{{ error() }}</p>
+    } @else if (items().length === 0) {
+      <p class="empty-message">No gallery images to display yet.</p>
+    } @else {
+      <div class="masonry">
+        @for (item of items(); track item.id; let i = $index) {
+          <figure class="masonry__item" [class.masonry__item--tall]="i % 3 === 0">
+            <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+            <figcaption>{{ item.title }}</figcaption>
+          </figure>
+        }
+      </div>
+    }
   </div>
 </section>

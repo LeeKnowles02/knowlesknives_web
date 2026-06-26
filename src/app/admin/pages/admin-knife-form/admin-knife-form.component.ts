@@ -1,6 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { KnifeApiService } from '../../../core/api/knife-api.service';
 import {
@@ -8,7 +8,6 @@ import {
   KnifePayload,
   KNIFE_AVAILABILITY_VALUES,
 } from '../../../core/models/knife.model';
-
 import { buildKnifeImagesFromFields } from '../../../shared/utils/knife-images.util';
 import { ImagePickerComponent } from '../../../shared/components/image-picker/image-picker.component';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -27,6 +26,7 @@ export class AdminKnifeFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly knifeApi = inject(KnifeApiService);
   private readonly toast = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   knifeForm!: FormGroup;
   isEditMode = false;
@@ -38,7 +38,6 @@ export class AdminKnifeFormComponent implements OnInit {
   submitError = signal<string | null>(null);
 
   readonly categories = ['Chef', 'Hunting', 'Utility', 'Collector', 'Custom', 'Kitchen'];
-
   readonly availabilities = KNIFE_AVAILABILITY_VALUES;
 
   ngOnInit(): void {
@@ -61,8 +60,8 @@ export class AdminKnifeFormComponent implements OnInit {
       featured: [false],
       active: [true],
     });
-    this.route.paramMap
 
+    this.route.paramMap
       .pipe(
         switchMap((params) => {
           const id = params.get('id');
@@ -79,6 +78,7 @@ export class AdminKnifeFormComponent implements OnInit {
           }
           return of(undefined);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((knife) => {
         this.loading.set(false);
@@ -127,6 +127,7 @@ export class AdminKnifeFormComponent implements OnInit {
     if (images.length === 0) {
       return;
     }
+
     const payload: KnifePayload = {
       name: value.name,
       category: value.category,
@@ -143,12 +144,13 @@ export class AdminKnifeFormComponent implements OnInit {
       active: value.active,
       images,
     };
+
     const request$ =
       this.isEditMode && this.knifeId
         ? this.knifeApi.updateKnife(this.knifeId, payload)
         : this.knifeApi.createKnife(payload);
 
-    request$.subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.toast.success(
           this.isEditMode ? 'Knife updated successfully.' : 'Knife added successfully.',

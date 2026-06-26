@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -14,6 +15,7 @@ export class AdminLoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -31,18 +33,23 @@ export class AdminLoginComponent {
     if (this.loginForm.invalid) {
       return;
     }
+
     const { email, password } = this.loginForm.value;
     this.loading.set(true);
-    this.auth.login(email, password).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.router.navigate(['/admin']);
-      },
-      error: () => {
-        this.loading.set(false);
-        this.errorMessage.set('Invalid email or password. Please try again.');
-      },
-    });
+
+    this.auth
+      .login(email, password)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.loading.set(false);
+          this.router.navigate(['/admin']);
+        },
+        error: () => {
+          this.loading.set(false);
+          this.errorMessage.set('Invalid email or password. Please try again.');
+        },
+      });
   }
 
   isInvalid(field: string): boolean {

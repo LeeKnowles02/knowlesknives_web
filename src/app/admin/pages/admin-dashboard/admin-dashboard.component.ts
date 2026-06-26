@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { DashboardApiService } from '../../../core/api/dashboard-api.service';
 import { DashboardStats } from '../../../core/models/dashboard-stats.model';
@@ -12,21 +13,25 @@ import { DashboardStats } from '../../../core/models/dashboard-stats.model';
 })
 export class AdminDashboardComponent implements OnInit {
   private readonly dashboardApi = inject(DashboardApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   stats = signal<DashboardStats | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.dashboardApi.getDashboardStats().subscribe({
-      next: (stats) => {
-        this.stats.set(stats);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Could not load dashboard stats. Please try again.');
-        this.loading.set(false);
-      },
-    });
+    this.dashboardApi
+      .getDashboardStats()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (stats) => {
+          this.stats.set(stats);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set('Could not load dashboard stats. Please try again.');
+          this.loading.set(false);
+        },
+      });
   }
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { switchMap, of, catchError } from 'rxjs';
 import { KnifeApiService } from '../../../core/api/knife-api.service';
@@ -7,7 +8,6 @@ import {
   AvailabilityLabelPipe,
   AvailabilityBadgePipe,
 } from '../../../shared/pipes/availability.pipe';
-
 import { CurrencyZarPipe } from '../../../shared/pipes/currency-zar.pipe';
 import { getKnifeImages } from '../../../shared/utils/knife-images.util';
 import { KnifeImage } from '../../../core/models/knife-image.model';
@@ -22,6 +22,7 @@ import { KnifeImage } from '../../../core/models/knife-image.model';
 export class KnifeDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly knifeApi = inject(KnifeApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   knife = signal<Knife | null>(null);
   loading = signal(true);
@@ -32,7 +33,6 @@ export class KnifeDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap
-
       .pipe(
         switchMap((params) => {
           const slug = params.get('slug');
@@ -40,9 +40,11 @@ export class KnifeDetailsComponent implements OnInit {
           if (!slug) {
             return of(null);
           }
+
           this.loading.set(true);
           this.error.set(null);
           this.notFound.set(false);
+
           return this.knifeApi.getKnifeBySlug(slug).pipe(
             catchError(() => {
               this.error.set('Could not load knife. Please try again.');
@@ -50,6 +52,7 @@ export class KnifeDetailsComponent implements OnInit {
             }),
           );
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((knife) => {
         if (knife === undefined) {
@@ -62,6 +65,7 @@ export class KnifeDetailsComponent implements OnInit {
           this.loading.set(false);
           return;
         }
+
         this.knife.set(knife);
         this.galleryImages = getKnifeImages(knife);
         this.selectedImage = this.galleryImages[0]?.imageUrl ?? '';

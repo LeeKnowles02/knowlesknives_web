@@ -15,6 +15,10 @@
   </div>
 </div>
 
+@if (loadError()) {
+  <div class="admin-alert admin-alert--error">{{ loadError() }}</div>
+}
+
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-card">
   <div class="form-grid">
     <div class="form-group form-grid__full">
@@ -48,6 +52,10 @@
       </label>
     </div>
   </div>
+
+  @if (submitError()) {
+    <p class="error">{{ submitError() }}</p>
+  }
 
   <button type="submit" class="admin-btn admin-btn--primary">
     {{ isEditMode ? 'Update Item' : 'Add to Gallery' }}

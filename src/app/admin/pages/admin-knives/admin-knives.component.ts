@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { KnifeApiService } from '../../../core/api/knife-api.service';
@@ -7,7 +8,6 @@ import {
   AvailabilityLabelPipe,
   AvailabilityBadgePipe,
 } from '../../../shared/pipes/availability.pipe';
-
 import { CurrencyZarPipe } from '../../../shared/pipes/currency-zar.pipe';
 import { getKnifePrimaryImage } from '../../../shared/utils/knife-images.util';
 
@@ -20,6 +20,7 @@ import { getKnifePrimaryImage } from '../../../shared/utils/knife-images.util';
 })
 export class AdminKnivesComponent implements OnInit {
   private readonly knifeApi = inject(KnifeApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
   knives = signal<Knife[]>([]);
@@ -27,18 +28,24 @@ export class AdminKnivesComponent implements OnInit {
   error = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.refresh$.pipe(switchMap(() => this.knifeApi.getAdminKnives())).subscribe({
-      next: (knives) => {
-        this.knives.set(knives);
-        this.loading.set(false);
-        this.error.set(null);
-      },
-      error: () => {
-        this.error.set('Could not load knives. Please try again.');
-        this.loading.set(false);
-      },
-    });
+    this.refresh$
+      .pipe(
+        switchMap(() => this.knifeApi.getAdminKnives()),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (knives) => {
+          this.knives.set(knives);
+          this.loading.set(false);
+          this.error.set(null);
+        },
+        error: () => {
+          this.error.set('Could not load knives. Please try again.');
+          this.loading.set(false);
+        },
+      });
   }
+
   primaryImage(knife: Knife): string | null {
     return getKnifePrimaryImage(knife);
   }
@@ -50,13 +57,16 @@ export class AdminKnivesComponent implements OnInit {
   deleteKnife(id: number, name: string): void {
     if (confirm(`Delete "${name}"?`)) {
       this.loading.set(true);
-      this.knifeApi.deleteKnife(id).subscribe({
-        next: () => this.refresh$.next(),
-        error: () => {
-          this.error.set('Could not delete knife. Please try again.');
-          this.loading.set(false);
-        },
-      });
+      this.knifeApi
+        .deleteKnife(id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => this.refresh$.next(),
+          error: () => {
+            this.error.set('Could not delete knife. Please try again.');
+            this.loading.set(false);
+          },
+        });
     }
   }
 }

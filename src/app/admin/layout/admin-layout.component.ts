@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { User } from '../../core/models/user.model';
-import { Subscription } from 'rxjs';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
 
 interface NavItem {
@@ -24,8 +23,8 @@ interface NavItem {
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private userSub?: Subscription;
   sidebarOpen = signal(false);
   currentUser = signal<User | null>(null);
 
@@ -44,16 +43,16 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
-    this.userSub = this.auth.currentUser$.subscribe((user) => {
-      this.currentUser.set(user);
-    });
+    this.auth.currentUser$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => this.currentUser.set(user));
+
     if (this.auth.isLoggedIn() && !this.auth.getCurrentUserValue()) {
       this.auth.loadCurrentUserIfLoggedIn();
     }
   }
 
   ngOnDestroy(): void {
-    this.userSub?.unsubscribe();
     document.body.classList.remove('nav-open');
   }
 

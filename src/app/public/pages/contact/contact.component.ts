@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
-
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, map } from 'rxjs';
+import { map, of, Subscription, switchMap } from 'rxjs';
 import { EnquiryApiService } from '../../../core/api/enquiry-api.service';
 import { KnifeApiService } from '../../../core/api/knife-api.service';
 import { ServiceApiService } from '../../../core/api/service-api.service';
@@ -14,7 +13,6 @@ import {
   KNIFE_ENQUIRY_MESSAGE_PLACEHOLDER,
   EnquiryPayload,
 } from '../../../core/models/enquiry.model';
-
 import { Knife } from '../../../core/models/knife.model';
 import { Service } from '../../../core/models/service.model';
 
@@ -27,12 +25,13 @@ export type EnquiryMode = 'general' | 'knife' | 'service';
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss',
 })
-export class ContactComponent implements OnInit, OnDestroy {
+export class ContactComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly enquiryApi = inject(EnquiryApiService);
   private readonly knifeApi = inject(KnifeApiService);
   private readonly serviceApi = inject(ServiceApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   enquiryForm!: FormGroup;
   submitted = false;
@@ -67,58 +66,69 @@ export class ContactComponent implements OnInit, OnDestroy {
 
   readonly fixedEnquiryTypeLabel = computed(() => this.getContextEnquiryType() ?? '');
 
-  private routeSub?: Subscription;
   private typeSub?: Subscription;
 
   ngOnInit(): void {
     this.buildForm('general');
-    this.routeSub = this.route.queryParamMap.subscribe((params) => {
-      const knifeId = params.get('knifeId');
-      const serviceId = params.get('serviceId');
-      const enquiryType = params.get('enquiryType') as EnquiryType | null;
 
-      if (knifeId) {
-        this.knifeApi
-          .getKnives()
-          .pipe(map((knives) => knives.find((k) => k.id === +knifeId) ?? null))
-          .subscribe((knife) => {
-            if (knife) {
-              this.mode.set('knife');
-              this.preselectedKnife.set(knife);
-              this.preselectedService.set(null);
-              this.buildForm('knife');
-            } else {
-              this.setGeneralMode(enquiryType);
-            }
-          });
+    this.route.queryParamMap
+      .pipe(
+        switchMap((params) => {
+          const knifeId = params.get('knifeId');
+          const serviceId = params.get('serviceId');
+          const enquiryType = params.get('enquiryType') as EnquiryType | null;
 
-        return;
-      }
+          if (knifeId) {
+            return this.knifeApi.getKnives().pipe(
+              map((knives) => ({
+                kind: 'knife' as const,
+                knife: knives.find((k) => k.id === +knifeId) ?? null,
+                enquiryType,
+              })),
+            );
+          }
 
-      if (serviceId) {
-        this.serviceApi
-          .getServices()
-          .pipe(map((services) => services.find((s) => s.id === +serviceId) ?? null))
-          .subscribe((service) => {
-            if (service) {
-              this.mode.set('service');
-              this.preselectedService.set(service);
-              this.preselectedKnife.set(null);
-              this.buildForm('service', service.enquiryType);
-            } else {
-              this.setGeneralMode(enquiryType);
-            }
-          });
+          if (serviceId) {
+            return this.serviceApi.getServices().pipe(
+              map((services) => ({
+                kind: 'service' as const,
+                service: services.find((s) => s.id === +serviceId) ?? null,
+                enquiryType,
+              })),
+            );
+          }
 
-        return;
-      }
-      this.setGeneralMode(enquiryType);
-    });
-  }
+          return of({ kind: 'general' as const, enquiryType });
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((result) => {
+        if (result.kind === 'knife') {
+          if (result.knife) {
+            this.mode.set('knife');
+            this.preselectedKnife.set(result.knife);
+            this.preselectedService.set(null);
+            this.buildForm('knife');
+          } else {
+            this.setGeneralMode(result.enquiryType);
+          }
+          return;
+        }
 
-  ngOnDestroy(): void {
-    this.routeSub?.unsubscribe();
-    this.typeSub?.unsubscribe();
+        if (result.kind === 'service') {
+          if (result.service) {
+            this.mode.set('service');
+            this.preselectedService.set(result.service);
+            this.preselectedKnife.set(null);
+            this.buildForm('service', result.service.enquiryType);
+          } else {
+            this.setGeneralMode(result.enquiryType);
+          }
+          return;
+        }
+
+        this.setGeneralMode(result.enquiryType);
+      });
   }
 
   onSubmit(): void {
@@ -139,7 +149,6 @@ export class ContactComponent implements OnInit, OnDestroy {
           : mode === 'service'
             ? service!.enquiryType
             : raw.enquiryType,
-
       message: raw.message,
     };
 
@@ -152,19 +161,23 @@ export class ContactComponent implements OnInit, OnDestroy {
       payload.selectedServiceId = service.id;
       payload.selectedServiceName = service.title;
     }
+
     this.submitting.set(true);
-    this.enquiryApi.createEnquiry(payload).subscribe({
-      next: () => {
-        this.submitting.set(false);
-        this.showSuccess = true;
-        this.submitted = false;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      },
-      error: () => {
-        this.submitting.set(false);
-        this.submitError.set('Could not send your enquiry. Please try again.');
-      },
-    });
+    this.enquiryApi
+      .createEnquiry(payload)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.submitting.set(false);
+          this.showSuccess = true;
+          this.submitted = false;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        error: () => {
+          this.submitting.set(false);
+          this.submitError.set('Could not send your enquiry. Please try again.');
+        },
+      });
   }
 
   isInvalid(field: string): boolean {
@@ -196,7 +209,6 @@ export class ContactComponent implements OnInit, OnDestroy {
     this.preselectedKnife.set(null);
     this.preselectedService.set(null);
     const type = enquiryType && ENQUIRY_TYPE_VALUES.includes(enquiryType) ? enquiryType : 'General';
-
     this.buildForm('general', type);
   }
 
@@ -226,6 +238,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       });
       return;
     }
+
     this.selectedEnquiryType.set(enquiryType);
     this.enquiryForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -234,9 +247,11 @@ export class ContactComponent implements OnInit, OnDestroy {
       enquiryType: [enquiryType, Validators.required],
       message: ['', [Validators.required, Validators.minLength(10)]],
     });
+
     this.typeSub = this.enquiryForm
       .get('enquiryType')!
-      .valueChanges.subscribe((type: EnquiryType) => {
+      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((type: EnquiryType) => {
         this.selectedEnquiryType.set(type);
       });
   }
@@ -244,7 +259,6 @@ export class ContactComponent implements OnInit, OnDestroy {
   private getContextEnquiryType(): EnquiryType | null {
     if (this.mode() === 'knife') return 'Knife Enquiry';
     if (this.mode() === 'service') return this.preselectedService()?.enquiryType ?? null;
-
     return null;
   }
 }

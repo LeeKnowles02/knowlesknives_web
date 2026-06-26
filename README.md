@@ -2,7 +2,7 @@
 
 A premium Angular frontend for **Knowles Knives** — a handcrafted custom knife-making business.
 
-This is a **frontend-only** demo with mock data and services. No backend, payments, or authentication yet. The architecture is designed so API integration can be added later with minimal changes.
+The public site and admin CMS connect to a REST API (`environment.apiUrl`). Gallery content still uses a local mock store until the gallery API is wired up.
 
 ## Features
 
@@ -11,23 +11,31 @@ This is a **frontend-only** demo with mock data and services. No backend, paymen
 - Knife listing with category, availability, search, and price filters
 - Knife detail pages with **Enquire About This Knife** (no buy/pay buttons)
 - Reactive enquiry form with knife/service pre-fill via query params
+- Prices displayed in South African Rand (ZAR)
 
 ### Admin area (`/admin`)
-- Dashboard with mock stats
-- Knife list with view/edit/delete (local mock state)
-- Add/edit knife form
-- Enquiry management with status updates
-- Services and gallery overview (read-only placeholders)
+- JWT authentication with route guards and HTTP interceptor
+- Dashboard with live stats from the API
+- Knife, service, and enquiry management (full CRUD via API)
+- Gallery management (local mock store — pending API migration)
+- Image upload with drag-to-reposition cropping
+- Toast notifications on successful saves
 
 ## Tech stack
 
-- Angular 19 (standalone components)
-- Angular Router with lazy-loaded routes
+- Angular 19 (standalone components, signals, lazy routes)
+- Angular Router with functional guards and HTTP interceptors
 - Reactive Forms
 - SCSS with shared design tokens
-- Mock services using `BehaviorSubject` (ready to swap for HTTP)
+- Prettier for consistent formatting
 
 ## Getting started
+
+### Prerequisites
+- Node.js 18+
+- Backend API running (default: `http://localhost:5000/api`)
+
+### Install and run
 
 ```bash
 npm install
@@ -42,23 +50,40 @@ Build for production:
 npm run build
 ```
 
+Format code:
+
+```bash
+npm run format
+```
+
+### Environment
+
+| File | Purpose |
+|------|---------|
+| `src/environments/environment.ts` | Development API URL (`http://localhost:5000/api`) |
+| `src/environments/environment.prod.ts` | Production API URL — set before deploying |
+
 ## Project structure
 
 ```
 src/app/
 ├── core/
+│   ├── api/             # HTTP services (KnifeApiService, etc.)
+│   ├── auth/            # AuthService, guards, interceptor
 │   ├── models/          # TypeScript interfaces
-│   ├── mock-data/       # Seed data
-│   └── services/        # Data services (TODO: replace with HTTP)
+│   ├── mock-data/       # Gallery seed data (temporary)
+│   └── services/        # GalleryService (mock, pending API)
 ├── public/
 │   ├── components/      # Header, footer, cards
 │   ├── layout/          # Public shell
 │   └── pages/           # Home, knives, contact, etc.
 ├── admin/
-│   ├── layout/          # Admin sidebar shell
-│   └── pages/           # Dashboard, knives, enquiries
+│   ├── layout/          # Admin sidebar shell + toasts
+│   └── pages/           # Dashboard, knives, enquiries, etc.
 └── shared/
-    └── pipes/           # Currency, availability labels
+    ├── components/      # Image picker, toast
+    ├── pipes/           # Currency ZAR, availability labels
+    └── utils/           # Knife image helpers
 ```
 
 ## Routes
@@ -67,30 +92,32 @@ src/app/
 |------|-------------|
 | `/` | Home |
 | `/knives` | Knife listing |
-| `/knives/:id` | Knife details |
+| `/knives/:slug` | Knife details |
 | `/services` | Services |
 | `/gallery` | Gallery |
 | `/about` | About |
 | `/contact` | Enquiry form |
-| `/admin` | Admin dashboard |
+| `/admin` | Admin dashboard (auth required) |
+| `/admin/login` | Admin login |
 
-## API integration (future)
+## API integration
 
-Services include `TODO` comments where HTTP calls should replace mock logic:
-
-- `KnifeService` — CRUD for knives
-- `EnquiryService` — submit and update enquiries
-- `ServiceCatalogService` / `GalleryService` — read catalog data
-- `DashboardService` — admin stats
-
-Add `provideHttpClient()` in `app.config.ts` and an `AuthGuard` on `/admin` routes when ready.
+| Domain | Service | Status |
+|--------|---------|--------|
+| Knives | `KnifeApiService` | Live |
+| Services | `ServiceApiService` | Live |
+| Enquiries | `EnquiryApiService` | Live |
+| Dashboard | `DashboardApiService` | Live |
+| Auth | `AuthService` | Live |
+| Uploads | `UploadApiService` | Live |
+| Gallery | `GalleryService` | Mock (local state) |
 
 ## Design
 
-Colour palette: black, charcoal, warm brown, cream, and steel tones. Placeholder images live in `public/assets/images/` as SVG gradients until real photography is added.
+Colour palette: black, charcoal, warm brown, cream, and steel tones. Brand assets live in `public/assets/images/`.
 
 ## Business rules
 
 - **No online payments** — all purchases go through enquiry
 - Knives show availability: Available, Reserved, Sold, Made to Order
-- Enquiries are logged to the console and stored in mock state
+- Enquiries are submitted to the API and managed in the admin panel

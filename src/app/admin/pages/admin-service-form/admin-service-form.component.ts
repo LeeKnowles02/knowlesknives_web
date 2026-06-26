@@ -1,6 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ServiceApiService } from '../../../core/api/service-api.service';
 import {
@@ -8,7 +8,6 @@ import {
   SERVICE_ENQUIRY_TYPE_OPTIONS,
   ServiceEnquiryType,
 } from '../../../core/models/service.model';
-
 import { switchMap, of, catchError } from 'rxjs';
 import { ImagePickerComponent } from '../../../shared/components/image-picker/image-picker.component';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -26,6 +25,7 @@ export class AdminServiceFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly serviceApi = inject(ServiceApiService);
   private readonly toast = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   serviceForm!: FormGroup;
   isEditMode = false;
@@ -47,8 +47,8 @@ export class AdminServiceFormComponent implements OnInit {
       active: [true],
       featured: [false],
     });
-    this.route.paramMap
 
+    this.route.paramMap
       .pipe(
         switchMap((params) => {
           const id = params.get('id');
@@ -64,6 +64,7 @@ export class AdminServiceFormComponent implements OnInit {
           }
           return of(undefined);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((service) => {
         if (service) {
@@ -94,12 +95,13 @@ export class AdminServiceFormComponent implements OnInit {
       active: value.active,
       featured: value.featured,
     };
+
     const request$ =
       this.isEditMode && this.serviceId
         ? this.serviceApi.updateService(this.serviceId, payload)
         : this.serviceApi.createService(payload);
 
-    request$.subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.toast.success(
           this.isEditMode ? 'Service updated successfully.' : 'Service added successfully.',

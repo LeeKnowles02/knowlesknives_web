@@ -9,6 +9,13 @@
   </div>
 </div>
 
+@if (error()) {
+  <div class="admin-alert admin-alert--error">{{ error() }}</div>
+}
+
+@if (loading()) {
+  <p class="admin-loading">Loading gallery…</p>
+} @else {
 <div class="table-wrap">
   <table class="admin-table">
     <thead>
@@ -21,7 +28,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (item of items$ | async; track item.id) {
+      @for (item of items(); track item.id) {
         <tr [class.admin-table--inactive]="!item.active">
           <td>
             <img class="admin-thumb" [src]="item.imageUrl" [alt]="item.title" />
@@ -69,3 +76,4 @@
     </tbody>
   </table>
 </div>
+}
