@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ApiClientService } from '../api/api-client.service';
 import { LoginResponse, User } from '../models/user.model';
@@ -8,6 +9,7 @@ const TOKEN_KEY = 'knowles_knives_token';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly api = inject(ApiClientService);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
   readonly currentUser$ = this.currentUserSubject.asObservable();
   login(email: string, password: string): Observable<LoginResponse> {
@@ -35,15 +37,31 @@ export class AuthService {
     return !!this.getToken();
   }
   getToken(): string | null {
+    if (!this.isBrowser()) {
+      return null;
+    }
+
     return localStorage.getItem(TOKEN_KEY);
   }
   saveToken(token: string): void {
+    if (!this.isBrowser()) {
+      return;
+    }
+
     localStorage.setItem(TOKEN_KEY, token);
   }
   clearToken(): void {
+    if (!this.isBrowser()) {
+      return;
+    }
+
     localStorage.removeItem(TOKEN_KEY);
   }
   getCurrentUserValue(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
   }
 }

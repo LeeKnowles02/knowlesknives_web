@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GalleryService } from '../../../core/services/gallery.service';
 import {
-  GalleryItem,
+  GalleryItemPayload,
   GalleryCategory,
   GALLERY_CATEGORIES,
 } from '../../../core/models/gallery-item.model';
@@ -29,7 +29,7 @@ export class AdminGalleryFormComponent implements OnInit {
 
   form!: FormGroup;
   isEditMode = false;
-  itemId: string | null = null;
+  itemId: number | null = null;
   submitted = false;
 
   loadError = signal<string | null>(null);
@@ -51,8 +51,8 @@ export class AdminGalleryFormComponent implements OnInit {
           const id = params.get('id');
           if (id && this.route.snapshot.url.some((s) => s.path === 'edit')) {
             this.isEditMode = true;
-            this.itemId = id;
-            return this.galleryService.getById(id).pipe(
+            this.itemId = +id;
+            return this.galleryService.getById(+id).pipe(
               catchError(() => {
                 this.loadError.set('Could not load gallery item. Please try again.');
                 return of(undefined);
@@ -80,7 +80,7 @@ export class AdminGalleryFormComponent implements OnInit {
     this.submitError.set(null);
     if (this.form.invalid) return;
     const value = this.form.value;
-    const itemData: Omit<GalleryItem, 'id'> = {
+    const itemData: GalleryItemPayload = {
       title: value.title,
       imageUrl: value.imageUrl,
       category: value.category,
@@ -95,7 +95,9 @@ export class AdminGalleryFormComponent implements OnInit {
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.toast.success(
-          this.isEditMode ? 'Gallery item updated successfully.' : 'Gallery item added successfully.',
+          this.isEditMode
+            ? 'Gallery item updated successfully.'
+            : 'Gallery item added successfully.',
         );
         this.router.navigate(['/admin/gallery']);
       },

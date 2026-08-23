@@ -1,0 +1,93 @@
+<div class="page-hero">
+  <div class="container">
+    <h1 class="page-hero__title">Our Goods</h1>
+
+    <p class="page-hero__subtitle">
+      Engraved and handcrafted pieces — enquire about availability. No online payments.
+    </p>
+  </div>
+</div>
+
+<section class="section section--cream">
+  <div class="container">
+    <div class="filters">
+      <div class="filters__group">
+        <label for="search">Search</label>
+
+        <input
+          id="search"
+          type="text"
+          placeholder="Search goods..."
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event); onFilterChange()"
+        />
+      </div>
+
+      <div class="filters__group">
+        <label for="category">Category</label>
+
+        <select
+          id="category"
+          [ngModel]="category()"
+          (ngModelChange)="category.set($event); onFilterChange()"
+        >
+          <option value="">All Categories</option>
+
+          @for (cat of categories(); track cat) {
+            <option [value]="cat">{{ cat }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filters__group">
+        <label for="availability">Availability</label>
+
+        <select
+          id="availability"
+          [ngModel]="availability()"
+          (ngModelChange)="availability.set($event); onFilterChange()"
+        >
+          <option value="">All</option>
+
+          @for (avail of availabilities; track avail) {
+            <option [value]="avail">{{ avail }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filters__group">
+        <label for="maxPrice">Max Price (R)</label>
+
+        <input
+          id="maxPrice"
+          type="number"
+          placeholder="Any"
+          [ngModel]="maxPrice()"
+          (ngModelChange)="maxPrice.set($event ? +$event : null); onFilterChange()"
+        />
+      </div>
+
+      <button
+        type="button"
+        class="btn btn--outline-dark btn--small filters__clear"
+        (click)="clearFilters()"
+      >
+        Clear
+      </button>
+    </div>
+
+    @if (loading()) {
+      <p class="page-state">Loading goods…</p>
+    } @else if (error()) {
+      <p class="page-state page-state--error">{{ error() }}</p>
+    } @else if (goods().length === 0) {
+      <p class="page-state">No goods found.</p>
+    } @else {
+      <div class="grid grid--3 goods-grid">
+        @for (good of goods(); track good.id) {
+          <app-good-card [good]="good" />
+        }
+      </div>
+    }
+  </div>
+</section>

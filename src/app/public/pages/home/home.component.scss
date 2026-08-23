@@ -213,6 +213,86 @@
   margin-top: clamp(2rem, 5vw, 3rem);
 }
 
+.featured-knives {
+  &__carousel {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 2vw, 1.25rem);
+  }
+
+  &__nav {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $tap-min;
+    height: $tap-min;
+    padding: 0;
+    border: 1px solid $color-cream-dark;
+    border-radius: 50%;
+    background: $color-white;
+    color: $color-charcoal;
+    font-family: $font-heading;
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: $shadow-sm;
+    transition:
+      background-color $transition,
+      border-color $transition,
+      color $transition,
+      opacity $transition,
+      transform $transition;
+
+    span {
+      display: block;
+      margin-top: -0.15em;
+    }
+
+    &:hover:not(:disabled) {
+      background: $color-charcoal;
+      border-color: $color-charcoal;
+      color: $color-cream;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    @include mobile {
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__viewport {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__track {
+    display: grid;
+    grid-template-columns: repeat(var(--items-per-view, 3), minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  &__slide {
+    min-width: 0;
+  }
+
+  &__status {
+    margin: 1rem 0 0;
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $color-steel;
+  }
+}
+
 .gallery-preview {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

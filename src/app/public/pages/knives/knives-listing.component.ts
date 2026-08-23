@@ -9,6 +9,7 @@ import {
   KNIFE_AVAILABILITY_VALUES,
 } from '../../../core/models/knife.model';
 import { parseKnifePrice } from '../../../shared/utils/knife-images.util';
+import { SeoService } from '../../../core/services/seo.service';
 
 @Component({
   selector: 'app-knives-listing',
@@ -19,6 +20,7 @@ import { parseKnifePrice } from '../../../shared/utils/knife-images.util';
 })
 export class KnivesListingComponent implements OnInit {
   private readonly knifeApi = inject(KnifeApiService);
+  private readonly seo = inject(SeoService);
   private readonly destroyRef = inject(DestroyRef);
 
   knives = signal<Knife[]>([]);
@@ -33,6 +35,12 @@ export class KnivesListingComponent implements OnInit {
   readonly availabilities = KNIFE_AVAILABILITY_VALUES;
 
   ngOnInit(): void {
+    this.seo.update({
+      title: 'Custom Knives for Sale | Knowles Knives',
+      description:
+        'Browse handcrafted custom knives from Knowles Knives, including hunting knives, chef knives, utility blades, and bespoke pieces.',
+      path: '/knives',
+    });
     this.applyFilters();
   }
 

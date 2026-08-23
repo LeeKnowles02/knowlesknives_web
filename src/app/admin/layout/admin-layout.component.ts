@@ -1,7 +1,15 @@
-import { Component, DestroyRef, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { User } from '../../core/models/user.model';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
@@ -23,6 +31,8 @@ interface NavItem {
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
   sidebarOpen = signal(false);
@@ -35,6 +45,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   readonly catalogueNav: NavItem[] = [
     { path: '/admin/knives', label: 'Knives', icon: '⚔', exact: false },
+    { path: '/admin/goods', label: 'Goods', icon: '◈', exact: false },
     { path: '/admin/services', label: 'Services', icon: '⚙', exact: false },
   ];
 
@@ -53,21 +64,33 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    document.body.classList.remove('nav-open');
+    if (!this.isBrowser()) {
+      return;
+    }
+
+    this.document.body.classList.remove('nav-open');
   }
 
   toggleSidebar(): void {
     this.sidebarOpen.update((v) => !v);
-    document.body.classList.toggle('nav-open', this.sidebarOpen());
+    if (this.isBrowser()) {
+      this.document.body.classList.toggle('nav-open', this.sidebarOpen());
+    }
   }
 
   closeSidebar(): void {
     this.sidebarOpen.set(false);
-    document.body.classList.remove('nav-open');
+    if (this.isBrowser()) {
+      this.document.body.classList.remove('nav-open');
+    }
   }
 
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/admin/login']);
+  }
+
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
   }
 }

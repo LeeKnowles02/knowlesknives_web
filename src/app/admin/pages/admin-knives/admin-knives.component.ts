@@ -50,6 +50,10 @@ export class AdminKnivesComponent implements OnInit {
     return getKnifePrimaryImage(knife);
   }
 
+  featuredCount(): number {
+    return this.knives().filter((knife) => knife.featured && knife.active).length;
+  }
+
   viewKnife(knife: Knife): void {
     window.open(`/knives/${knife.slug}`, '_blank');
   }

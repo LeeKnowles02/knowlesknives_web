@@ -1,0 +1,110 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+
+    <h1>Goods</h1>
+
+    <p class="admin-page-header__desc">
+      Manage engraved and handcrafted goods, availability, and product details. Featured:
+      {{ featuredCount() }}/5
+    </p>
+  </div>
+
+  <div class="admin-page-header__actions">
+    <a routerLink="/admin/goods/new" class="admin-btn admin-btn--primary">Add Good</a>
+  </div>
+</div>
+
+@if (loading() && goods().length === 0) {
+  <p class="page-state">Loading goods…</p>
+} @else if (error()) {
+  <p class="page-state page-state--error">{{ error() }}</p>
+} @else if (goods().length === 0) {
+  <p class="page-state">No goods found.</p>
+} @else {
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+
+          <th>Name</th>
+
+          <th>Category</th>
+
+          <th>Price</th>
+
+          <th>Availability</th>
+
+          <th>Featured</th>
+
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (good of goods(); track good.id) {
+          <tr [class.admin-table--inactive]="!good.active">
+            <td>
+              @if (primaryImage(good); as src) {
+                <img class="admin-thumb" [src]="src" [alt]="good.name" />
+              } @else {
+                <span class="admin-thumb-placeholder">No img</span>
+              }
+            </td>
+
+            <td>
+              <span class="admin-table__name">{{ good.name }}</span>
+            </td>
+
+            <td>{{ good.category }}</td>
+
+            <td>{{ good.price | currencyZar }}</td>
+
+            <td>
+              <span class="badge badge--{{ good.availability | availabilityBadge }}">
+                {{ good.availability | availabilityLabel }}
+              </span>
+            </td>
+
+            <td>
+              @if (good.featured && good.active) {
+                <span class="admin-badge admin-badge--featured">
+                  Yes@if (good.featuredOrder) { (#{{ good.featuredOrder }}) }
+                </span>
+              } @else {
+                <span class="admin-badge admin-badge--inactive">No</span>
+              }
+            </td>
+
+            <td>
+              <div class="admin-table__actions">
+                <button
+                  type="button"
+                  class="admin-btn admin-btn--secondary admin-btn--sm"
+                  (click)="viewGood(good)"
+                >
+                  View
+                </button>
+
+                <a
+                  [routerLink]="['/admin/goods', good.id, 'edit']"
+                  class="admin-btn admin-btn--secondary admin-btn--sm"
+                  >Edit</a
+                >
+
+                <button
+                  type="button"
+                  class="admin-btn admin-btn--danger admin-btn--sm"
+                  (click)="deleteGood(good.id, good.name)"
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

@@ -17,9 +17,9 @@
       <span class="hero__title-accent">Masterfully Made</span>
     </h1>
     <p class="hero__text">
-      Each Knowles knife is individually crafted with precision, passion, and purpose. From hunting
-      blades to chef's knives and bespoke commissions — blades built to be used, admired, and passed
-      down.
+      Based in the Randburg area and serving Johannesburg, Knowles Knives creates handmade custom
+      knives, bespoke commissions, engraving, blade services, and knife-making experiences by
+      appointment.
     </p>
     <div class="hero__actions">
       <a routerLink="/knives" class="btn btn--primary">View Knives</a>
@@ -40,7 +40,10 @@
 
 <section class="craft-strip">
   <div class="container craft-strip__inner">
-    <p>Every blade begins with fire, steel, and intention — finished by hand in our workshop.</p>
+    <p>
+      Every blade begins with fire, steel, and intention — finished by hand in our workshop near
+      Randburg.
+    </p>
   </div>
 </section>
 
@@ -53,7 +56,7 @@
         A curated selection of our finest work — enquire for availability and lead times.
       </p>
     </div>
-    <div class="grid grid--3">
+    <div class="featured-knives">
       @if (knivesLoading()) {
         <p class="page-state">Loading knives…</p>
       } @else if (knivesError()) {
@@ -61,9 +64,48 @@
       } @else if (featuredKnives().length === 0) {
         <p class="page-state">No featured knives found.</p>
       } @else {
-        @for (knife of featuredKnives(); track knife.id) {
-          <app-knife-card [knife]="knife" />
-        }
+        <div
+          class="featured-knives__carousel"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Featured knives"
+        >
+          <button
+            type="button"
+            class="featured-knives__nav featured-knives__nav--prev"
+            (click)="prevFeaturedKnives()"
+            [disabled]="!canGoPrevFeatured()"
+            aria-label="Previous featured knives"
+          >
+            <span aria-hidden="true">&lsaquo;</span>
+          </button>
+
+          <div class="featured-knives__viewport">
+            <div
+              class="featured-knives__track"
+              [style.--items-per-view]="itemsPerView()"
+            >
+              @for (knife of visibleFeaturedKnives(); track knife.id) {
+                <div class="featured-knives__slide">
+                  <app-knife-card [knife]="knife" />
+                </div>
+              }
+            </div>
+            <p class="featured-knives__status">
+              {{ featuredPageNumber() }} / {{ featuredPageCount() }}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="featured-knives__nav featured-knives__nav--next"
+            (click)="nextFeaturedKnives()"
+            [disabled]="!canGoNextFeatured()"
+            aria-label="Next featured knives"
+          >
+            <span aria-hidden="true">&rsaquo;</span>
+          </button>
+        </div>
       }
     </div>
     <div class="section-cta">

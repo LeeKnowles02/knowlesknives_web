@@ -12,12 +12,12 @@ import { AuthService } from '../../../core/auth/auth.service';
   styleUrl: './admin-login.component.scss',
 })
 export class AdminLoginComponent {
-  private readonly fb = inject(FormBuilder);
+  private readonly formbuilder = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  loginForm: FormGroup = this.fb.group({
+  loginForm: FormGroup = this.formbuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   });

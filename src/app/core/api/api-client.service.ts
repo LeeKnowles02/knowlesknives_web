@@ -1,14 +1,26 @@
-import { Injectable, inject } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
 
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiClientService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.apiUrl;
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly baseUrl = this.resolveBaseUrl();
   get<T>(
     path: string,
     params?: Record<string, string | number | boolean | undefined>,
@@ -67,6 +79,18 @@ export class ApiClientService {
   private handleError(err: HttpErrorResponse): Observable<never> {
     const message =
       err.error?.message ?? err.message ?? 'An unexpected error occurred. Please try again.';
-    return throwError(() => new Error(message));
+    return throwError(() => new ApiError(message, err.status));
+  }
+
+  private resolveBaseUrl(): string {
+    if (/^https?:\/\//i.test(environment.apiUrl)) {
+      return environment.apiUrl;
+    }
+
+    if (isPlatformServer(this.platformId)) {
+      return `${environment.siteUrl.replace(/\/$/, '')}${environment.apiUrl}`;
+    }
+
+    return environment.apiUrl;
   }
 }

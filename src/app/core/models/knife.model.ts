@@ -24,6 +24,7 @@ export interface Knife {
   overallLength?: string | null;
   notes?: string | null;
   featured: boolean;
+  featuredOrder?: number | null;
   active: boolean;
   images: KnifeImage[];
   primaryImage?: KnifeImage | null;

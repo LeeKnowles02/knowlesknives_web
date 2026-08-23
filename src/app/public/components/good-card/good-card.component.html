@@ -1,0 +1,31 @@
+<article class="good-card">
+  <a [routerLink]="['/goods', good.slug]" class="good-card__image-link">
+    <div class="good-card__image">
+      @if (primaryImage; as src) {
+        <img [src]="src" [alt]="good.name" loading="lazy" />
+      } @else {
+        <div class="good-card__placeholder">No image available</div>
+      }
+      <div class="good-card__image-shade"></div>
+      <span class="badge badge--{{ good.availability | availabilityBadge }} good-card__badge">
+        {{ good.availability | availabilityLabel }}
+      </span>
+    </div>
+  </a>
+
+  <div class="good-card__body">
+    <span class="good-card__category">{{ good.category }}</span>
+    <h3 class="good-card__title">
+      <a [routerLink]="['/goods', good.slug]">{{ good.name }}</a>
+    </h3>
+    <p class="good-card__desc">{{ good.shortDescription }}</p>
+    <div class="good-card__footer">
+      <span class="good-card__price">{{ good.price | currencyZar }}</span>
+      <a
+        [routerLink]="['/goods', good.slug]"
+        class="btn btn--outline-dark btn--small good-card__btn"
+        >View Details</a
+      >
+    </div>
+  </div>
+</article>

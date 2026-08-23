@@ -1,0 +1,139 @@
+<div class="admin-page-header">
+  <div>
+    <span class="admin-page-header__eyebrow">Admin</span>
+    <h1>{{ isEditMode ? 'Edit Good' : 'Add Good' }}</h1>
+    <p class="admin-page-header__desc">
+      {{
+        isEditMode
+          ? 'Update item details, images, and availability.'
+          : 'Add a new engraved or handcrafted item to the catalogue.'
+      }}
+    </p>
+  </div>
+  <div class="admin-page-header__actions">
+    <a routerLink="/admin/goods" class="admin-btn admin-btn--secondary">← Back to Goods</a>
+  </div>
+</div>
+
+@if (loadError()) {
+  <div class="admin-alert admin-alert--error">{{ loadError() }}</div>
+}
+
+<form [formGroup]="goodForm" (ngSubmit)="onSubmit()" class="form-card">
+  <div class="form-grid">
+    <div class="form-group">
+      <label for="name">Name *</label>
+      <input id="name" type="text" formControlName="name" />
+      @if (isInvalid('name')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category *</label>
+      <select id="category" formControlName="category">
+        @for (cat of categories; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price (R)</label>
+      <input id="price" type="number" formControlName="price" />
+    </div>
+
+    <div class="form-group">
+      <label for="availability">Availability *</label>
+      <select id="availability" formControlName="availability">
+        @for (avail of availabilities; track avail) {
+          <option [value]="avail">{{ avail }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group form-grid__full">
+      <label for="shortDescription">Short Description *</label>
+      <input id="shortDescription" type="text" formControlName="shortDescription" />
+      @if (isInvalid('shortDescription')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group form-grid__full">
+      <label for="description">Full Description *</label>
+      <textarea id="description" formControlName="description" rows="4"></textarea>
+      @if (isInvalid('description')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="material">Material *</label>
+      <input id="material" type="text" formControlName="material" />
+      @if (isInvalid('material')) {
+        <span class="error">Required</span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="finish">Finish</label>
+      <input id="finish" type="text" formControlName="finish" />
+    </div>
+
+    <div class="form-group">
+      <label for="dimensions">Dimensions</label>
+      <input id="dimensions" type="text" formControlName="dimensions" />
+    </div>
+
+    <div class="form-group">
+      <label for="personalization">Personalization</label>
+      <input
+        id="personalization"
+        type="text"
+        formControlName="personalization"
+        placeholder="e.g. Custom engraving available"
+      />
+    </div>
+
+    <div class="form-grid__full">
+      <p class="form-hint">
+        Up to 4 images. Image 1 is the primary display photo (used on cards and listings).
+      </p>
+      <app-image-picker formControlName="image1" label="Image 1 — Primary" [required]="true" />
+      @if (isInvalid('image1')) {
+        <span class="error">Required</span>
+      }
+      <app-image-picker formControlName="image2" label="Image 2 — Optional" />
+      <app-image-picker formControlName="image3" label="Image 3 — Optional" />
+      <app-image-picker formControlName="image4" label="Image 4 — Optional" />
+    </div>
+
+    <div class="form-group form-grid__full">
+      <label for="notes">Notes</label>
+      <textarea id="notes" formControlName="notes" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="featured" />
+        Featured (max 5)
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="active" />
+        Active (visible on public site)
+      </label>
+    </div>
+  </div>
+
+  @if (submitError()) {
+    <p class="error">{{ submitError() }}</p>
+  }
+
+  <button type="submit" class="admin-btn admin-btn--primary" [disabled]="loading()">
+    {{ isEditMode ? 'Update Good' : 'Add Good' }}
+  </button>
+</form>

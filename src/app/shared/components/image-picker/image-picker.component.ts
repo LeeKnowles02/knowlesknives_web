@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  OnDestroy,
-  forwardRef,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, Input, OnDestroy, forwardRef, inject, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { UploadApiService } from '../../../core/api/upload-api.service';
 import { firstValueFrom } from 'rxjs';

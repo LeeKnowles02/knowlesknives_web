@@ -12,6 +12,7 @@ import { buildKnifeImagesFromFields } from '../../../shared/utils/knife-images.u
 import { ImagePickerComponent } from '../../../shared/components/image-picker/image-picker.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { switchMap, of, catchError } from 'rxjs';
+import { ApiError } from '../../../core/api/api-client.service';
 
 @Component({
   selector: 'app-admin-knife-form',
@@ -157,8 +158,12 @@ export class AdminKnifeFormComponent implements OnInit {
         );
         this.router.navigate(['/admin/knives']);
       },
-      error: () => {
-        this.submitError.set('Could not save knife. Please try again.');
+      error: (err) => {
+        const message =
+          err instanceof ApiError
+            ? err.message
+            : 'Could not save knife. Please try again.';
+        this.submitError.set(message);
       },
     });
   }

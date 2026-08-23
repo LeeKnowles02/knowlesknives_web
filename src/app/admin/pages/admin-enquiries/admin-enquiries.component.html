@@ -37,6 +37,10 @@
             <p><strong>Knife:</strong> {{ name }}</p>
           }
 
+          @if (goodName(enquiry); as name) {
+            <p><strong>Good:</strong> {{ name }}</p>
+          }
+
           @if (serviceName(enquiry); as name) {
             <p><strong>Service:</strong> {{ name }}</p>
           }

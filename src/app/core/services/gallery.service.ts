@@ -1,57 +1,51 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { GalleryItem } from '../models/gallery-item.model';
-import { MOCK_GALLERY } from '../mock-data/gallery.mock';
+import { Injectable, inject } from '@angular/core';
+import { Observable, map, switchMap } from 'rxjs';
+import { GalleryApiService } from '../api/gallery-api.service';
+import { GalleryItem, GalleryItemPayload } from '../models/gallery-item.model';
 
-/** Local mock gallery store until GalleryApiService is wired to the backend. */
 @Injectable({ providedIn: 'root' })
 export class GalleryService {
-  private readonly itemsSubject = new BehaviorSubject<GalleryItem[]>([...MOCK_GALLERY]);
-  readonly items$ = this.itemsSubject.asObservable();
+  private readonly galleryApi = inject(GalleryApiService);
 
   getAll(): Observable<GalleryItem[]> {
-    return this.items$;
+    return this.galleryApi.getAdminItems();
   }
 
   getActive(): Observable<GalleryItem[]> {
-    return this.items$.pipe(map((items) => items.filter((i) => i.active)));
+    return this.galleryApi.getActive();
   }
 
   getPreview(count = 4): Observable<GalleryItem[]> {
     return this.getActive().pipe(map((items) => items.slice(0, count)));
   }
 
-  getById(id: string): Observable<GalleryItem | undefined> {
-    return this.items$.pipe(map((items) => items.find((i) => i.id === id)));
+  getById(id: number): Observable<GalleryItem> {
+    return this.galleryApi.getAdminItemById(id);
   }
 
-  addItem(item: Omit<GalleryItem, 'id'>): Observable<GalleryItem> {
-    const newItem: GalleryItem = { ...item, id: String(Date.now()) };
-    this.itemsSubject.next([...this.itemsSubject.value, newItem]);
-    return new BehaviorSubject(newItem).asObservable();
+  addItem(item: GalleryItemPayload): Observable<GalleryItem> {
+    return this.galleryApi.createItem(item);
   }
 
-  updateItem(id: string, updates: Partial<GalleryItem>): Observable<GalleryItem | undefined> {
-    const list = this.itemsSubject.value;
-    const index = list.findIndex((i) => i.id === id);
-    if (index === -1) return new BehaviorSubject(undefined).asObservable();
-    const updated = { ...list[index], ...updates, id };
-    const newList = [...list];
-    newList[index] = updated;
-    this.itemsSubject.next(newList);
-    return new BehaviorSubject(updated).asObservable();
+  updateItem(id: number, updates: GalleryItemPayload): Observable<GalleryItem> {
+    return this.galleryApi.updateItem(id, updates);
   }
 
-  deactivateItem(id: string): Observable<GalleryItem | undefined> {
-    return this.updateItem(id, { active: false });
+  deactivateItem(id: number): Observable<GalleryItem> {
+    return this.galleryApi.getAdminItemById(id).pipe(
+      switchMap((existing) =>
+        this.galleryApi.updateItem(id, {
+          title: existing.title,
+          imageUrl: existing.imageUrl,
+          category: existing.category,
+          active: false,
+          sortOrder: existing.sortOrder,
+        }),
+      ),
+    );
   }
 
-  deleteItem(id: string): Observable<boolean> {
-    const filtered = this.itemsSubject.value.filter((i) => i.id !== id);
-    const success = filtered.length < this.itemsSubject.value.length;
-    if (success) {
-      this.itemsSubject.next(filtered);
-    }
-    return new BehaviorSubject(success).asObservable();
+  deleteItem(id: number): Observable<void> {
+    return this.galleryApi.deleteItem(id);
   }
 }

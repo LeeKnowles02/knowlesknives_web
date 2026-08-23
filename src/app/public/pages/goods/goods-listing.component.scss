@@ -1,0 +1,55 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  @include card-surface;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr;
+  }
+
+  &__group {
+    label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+      color: $color-steel;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: $tap-min;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid $color-cream-dark;
+      border-radius: $radius-sm;
+      font-size: 1rem;
+      background: $color-white;
+
+      &:focus {
+        outline: none;
+        border-color: $color-brown-warm;
+        box-shadow: 0 0 0 3px rgba($color-brown-warm, 0.12);
+      }
+    }
+  }
+
+  &__clear {
+    @media (max-width: $bp-md) {
+      width: 100%;
+    }
+  }
+}

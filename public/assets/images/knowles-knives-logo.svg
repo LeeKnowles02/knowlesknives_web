@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">Knowles Knives logo</title>
+  <rect width="96" height="96" rx="18" fill="#141414"/>
+  <path d="M22 63c15-3 29-10 42-22l10-10 4 4-10 10C56 57 40 66 22 69v-6Z" fill="#c89b63"/>
+  <path d="M24 59c12-4 24-11 36-23l7-7 3 3-8 8C51 51 38 59 24 64v-5Z" fill="#f4ead8"/>
+  <circle cx="28" cy="66" r="4" fill="#8a5a36"/>
+  <path d="M18 72h60" stroke="#c89b63" stroke-width="4" stroke-linecap="round"/>
+</svg>

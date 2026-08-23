@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { ServiceApiService } from '../../../core/api/service-api.service';
 import { Service } from '../../../core/models/service.model';
+import { SeoService } from '../../../core/services/seo.service';
 
 @Component({
   selector: 'app-services',
@@ -13,6 +14,7 @@ import { Service } from '../../../core/models/service.model';
 })
 export class ServicesComponent implements OnInit {
   private readonly serviceApi = inject(ServiceApiService);
+  private readonly seo = inject(SeoService);
   private readonly destroyRef = inject(DestroyRef);
 
   services = signal<Service[]>([]);
@@ -20,6 +22,13 @@ export class ServicesComponent implements OnInit {
   error = signal<string | null>(null);
 
   ngOnInit(): void {
+    this.seo.update({
+      title: 'Knife Services, Engraving & Courses | Randburg',
+      description:
+        'Knife making, engraving, and custom blade services near Randburg and Johannesburg. Commissions, repairs, and courses by appointment.',
+      path: '/services',
+    });
+
     this.serviceApi
       .getServices({ active: true })
       .pipe(takeUntilDestroyed(this.destroyRef))

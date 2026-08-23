@@ -2,8 +2,8 @@
   <div class="container">
     <h1 class="page-hero__title">{{ pageTitle() }}</h1>
     <p class="page-hero__subtitle">
-      No online payments — tell us what you're looking for and we'll respond personally to confirm
-      availability.
+      By appointment only — send an enquiry for custom knives, courses, engraving, or blade services
+      in Randburg and Johannesburg.
     </p>
   </div>
 </div>
@@ -41,11 +41,11 @@
             <div class="contact__cards">
               <div class="contact__card">
                 <span class="contact__card-label">Email</span>
-                <span>enquiries&#64;knowlesknives.co.uk</span>
+                <span>gordon-k&#64;live.com</span>
               </div>
               <div class="contact__card">
-                <span class="contact__card-label">Workshop</span>
-                <span>By appointment only</span>
+                <span class="contact__card-label">Service area</span>
+                <span>Randburg &amp; Johannesburg</span>
               </div>
             </div>
             <p class="contact__note">
@@ -66,6 +66,13 @@
               <div class="contact__readonly">
                 <span class="contact__readonly-label">Selected Knife</span>
                 <span class="contact__readonly-value">{{ knife.name }}</span>
+              </div>
+            }
+
+            @if (mode() === 'good' && preselectedGood(); as good) {
+              <div class="contact__readonly">
+                <span class="contact__readonly-label">Selected Item</span>
+                <span class="contact__readonly-value">{{ good.name }}</span>
               </div>
             }
 

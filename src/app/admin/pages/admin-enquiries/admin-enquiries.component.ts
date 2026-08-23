@@ -60,6 +60,10 @@ export class AdminEnquiriesComponent implements OnInit {
     return enquiry.selectedKnifeName ?? enquiry.selectedKnife?.name ?? null;
   }
 
+  goodName(enquiry: Enquiry): string | null {
+    return enquiry.selectedGoodName ?? enquiry.selectedGood?.name ?? null;
+  }
+
   serviceName(enquiry: Enquiry): string | null {
     return enquiry.selectedServiceName ?? enquiry.selectedService?.title ?? null;
   }

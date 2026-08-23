@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://YOUR_PRODUCTION_API_URL/api',
+  apiUrl: '/api',
+  siteUrl: 'https://REPLACE_WITH_CODE_CAPSULES_URL',
 };

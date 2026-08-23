@@ -28,6 +28,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'goods',
+        loadComponent: () =>
+          import('./public/pages/goods/goods-listing.component').then(
+            (m) => m.GoodsListingComponent,
+          ),
+      },
+      {
+        path: 'goods/:slug',
+        loadComponent: () =>
+          import('./public/pages/good-details/good-details.component').then(
+            (m) => m.GoodDetailsComponent,
+          ),
+      },
+      {
         path: 'services',
         loadComponent: () =>
           import('./public/pages/services/services.component').then((m) => m.ServicesComponent),
@@ -46,6 +60,11 @@ export const routes: Routes = [
         path: 'contact',
         loadComponent: () =>
           import('./public/pages/contact/contact.component').then((m) => m.ContactComponent),
+      },
+      {
+        path: '404',
+        loadComponent: () =>
+          import('./public/pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
       },
     ],
   },
@@ -86,6 +105,27 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./admin/pages/admin-knife-form/admin-knife-form.component').then(
             (m) => m.AdminKnifeFormComponent,
+          ),
+      },
+      {
+        path: 'goods',
+        loadComponent: () =>
+          import('./admin/pages/admin-goods/admin-goods.component').then(
+            (m) => m.AdminGoodsComponent,
+          ),
+      },
+      {
+        path: 'goods/new',
+        loadComponent: () =>
+          import('./admin/pages/admin-good-form/admin-good-form.component').then(
+            (m) => m.AdminGoodFormComponent,
+          ),
+      },
+      {
+        path: 'goods/:id/edit',
+        loadComponent: () =>
+          import('./admin/pages/admin-good-form/admin-good-form.component').then(
+            (m) => m.AdminGoodFormComponent,
           ),
       },
       {
@@ -139,5 +179,9 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: '' },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./public/pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
+  },
 ];

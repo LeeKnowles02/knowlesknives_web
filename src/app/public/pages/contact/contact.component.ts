@@ -1,22 +1,35 @@
-import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  PLATFORM_ID,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { map, of, Subscription, switchMap } from 'rxjs';
 import { EnquiryApiService } from '../../../core/api/enquiry-api.service';
 import { KnifeApiService } from '../../../core/api/knife-api.service';
+import { GoodApiService } from '../../../core/api/good-api.service';
 import { ServiceApiService } from '../../../core/api/service-api.service';
 import {
   EnquiryType,
   ENQUIRY_TYPE_VALUES,
   ENQUIRY_MESSAGE_PLACEHOLDERS,
   KNIFE_ENQUIRY_MESSAGE_PLACEHOLDER,
+  GOOD_ENQUIRY_MESSAGE_PLACEHOLDER,
   EnquiryPayload,
 } from '../../../core/models/enquiry.model';
 import { Knife } from '../../../core/models/knife.model';
+import { Good } from '../../../core/models/good.model';
 import { Service } from '../../../core/models/service.model';
+import { SeoService } from '../../../core/services/seo.service';
 
-export type EnquiryMode = 'general' | 'knife' | 'service';
+export type EnquiryMode = 'general' | 'knife' | 'good' | 'service';
 
 @Component({
   selector: 'app-contact',
@@ -30,7 +43,10 @@ export class ContactComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly enquiryApi = inject(EnquiryApiService);
   private readonly knifeApi = inject(KnifeApiService);
+  private readonly goodApi = inject(GoodApiService);
   private readonly serviceApi = inject(ServiceApiService);
+  private readonly seo = inject(SeoService);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
   enquiryForm!: FormGroup;
@@ -42,6 +58,7 @@ export class ContactComponent implements OnInit {
 
   readonly mode = signal<EnquiryMode>('general');
   readonly preselectedKnife = signal<Knife | null>(null);
+  readonly preselectedGood = signal<Good | null>(null);
   readonly preselectedService = signal<Service | null>(null);
   readonly selectedEnquiryType = signal<EnquiryType>('General');
 
@@ -50,6 +67,9 @@ export class ContactComponent implements OnInit {
   readonly pageTitle = computed(() => {
     if (this.mode() === 'knife' && this.preselectedKnife()) {
       return 'Enquire About This Knife';
+    }
+    if (this.mode() === 'good' && this.preselectedGood()) {
+      return 'Enquire About This Item';
     }
     if (this.mode() === 'service' && this.preselectedService()) {
       return `Enquire — ${this.preselectedService()!.title}`;
@@ -61,6 +81,9 @@ export class ContactComponent implements OnInit {
     if (this.mode() === 'knife') {
       return KNIFE_ENQUIRY_MESSAGE_PLACEHOLDER;
     }
+    if (this.mode() === 'good') {
+      return GOOD_ENQUIRY_MESSAGE_PLACEHOLDER;
+    }
     return ENQUIRY_MESSAGE_PLACEHOLDERS[this.selectedEnquiryType()];
   });
 
@@ -69,12 +92,20 @@ export class ContactComponent implements OnInit {
   private typeSub?: Subscription;
 
   ngOnInit(): void {
+    this.seo.update({
+      title: 'Contact Knowles Knives | Randburg & Johannesburg Enquiries',
+      description:
+        'Contact Knowles Knives for custom knife enquiries in Randburg and Johannesburg. By appointment — no online payments.',
+      path: '/contact',
+    });
+
     this.buildForm('general');
 
     this.route.queryParamMap
       .pipe(
         switchMap((params) => {
           const knifeId = params.get('knifeId');
+          const goodId = params.get('goodId');
           const serviceId = params.get('serviceId');
           const enquiryType = params.get('enquiryType') as EnquiryType | null;
 
@@ -83,6 +114,16 @@ export class ContactComponent implements OnInit {
               map((knives) => ({
                 kind: 'knife' as const,
                 knife: knives.find((k) => k.id === +knifeId) ?? null,
+                enquiryType,
+              })),
+            );
+          }
+
+          if (goodId) {
+            return this.goodApi.getGoods().pipe(
+              map((goods) => ({
+                kind: 'good' as const,
+                good: goods.find((g) => g.id === +goodId) ?? null,
                 enquiryType,
               })),
             );
@@ -107,8 +148,22 @@ export class ContactComponent implements OnInit {
           if (result.knife) {
             this.mode.set('knife');
             this.preselectedKnife.set(result.knife);
+            this.preselectedGood.set(null);
             this.preselectedService.set(null);
             this.buildForm('knife');
+          } else {
+            this.setGeneralMode(result.enquiryType);
+          }
+          return;
+        }
+
+        if (result.kind === 'good') {
+          if (result.good) {
+            this.mode.set('good');
+            this.preselectedGood.set(result.good);
+            this.preselectedKnife.set(null);
+            this.preselectedService.set(null);
+            this.buildForm('good');
           } else {
             this.setGeneralMode(result.enquiryType);
           }
@@ -120,6 +175,7 @@ export class ContactComponent implements OnInit {
             this.mode.set('service');
             this.preselectedService.set(result.service);
             this.preselectedKnife.set(null);
+            this.preselectedGood.set(null);
             this.buildForm('service', result.service.enquiryType);
           } else {
             this.setGeneralMode(result.enquiryType);
@@ -138,6 +194,7 @@ export class ContactComponent implements OnInit {
     const raw = this.enquiryForm.getRawValue();
     const mode = this.mode();
     const knife = this.preselectedKnife();
+    const good = this.preselectedGood();
     const service = this.preselectedService();
     const payload: EnquiryPayload = {
       name: raw.name,
@@ -146,15 +203,22 @@ export class ContactComponent implements OnInit {
       enquiryType:
         mode === 'knife'
           ? 'Knife Enquiry'
-          : mode === 'service'
-            ? service!.enquiryType
-            : raw.enquiryType,
+          : mode === 'good'
+            ? 'Goods Enquiry'
+            : mode === 'service'
+              ? service!.enquiryType
+              : raw.enquiryType,
       message: raw.message,
     };
 
     if (mode === 'knife' && knife) {
       payload.selectedKnifeId = knife.id;
       payload.selectedKnifeName = knife.name;
+    }
+
+    if (mode === 'good' && good) {
+      payload.selectedGoodId = good.id;
+      payload.selectedGoodName = good.name;
     }
 
     if (mode === 'service' && service) {
@@ -171,7 +235,9 @@ export class ContactComponent implements OnInit {
           this.submitting.set(false);
           this.showSuccess = true;
           this.submitted = false;
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (isPlatformBrowser(this.platformId)) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         },
         error: () => {
           this.submitting.set(false);
@@ -198,6 +264,8 @@ export class ContactComponent implements OnInit {
 
       if (mode === 'knife') {
         this.enquiryForm.get('enquiryType')?.setValue('Knife Enquiry');
+      } else if (mode === 'good') {
+        this.enquiryForm.get('enquiryType')?.setValue('Goods Enquiry');
       } else if (this.preselectedService()) {
         this.enquiryForm.get('enquiryType')?.setValue(this.preselectedService()!.enquiryType);
       }
@@ -207,6 +275,7 @@ export class ContactComponent implements OnInit {
   private setGeneralMode(enquiryType: EnquiryType | null): void {
     this.mode.set('general');
     this.preselectedKnife.set(null);
+    this.preselectedGood.set(null);
     this.preselectedService.set(null);
     const type = enquiryType && ENQUIRY_TYPE_VALUES.includes(enquiryType) ? enquiryType : 'General';
     this.buildForm('general', type);
@@ -222,6 +291,18 @@ export class ContactComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         phone: ['', Validators.required],
         enquiryType: [{ value: 'Knife Enquiry', disabled: true }, Validators.required],
+        message: ['', [Validators.required, Validators.minLength(10)]],
+      });
+      return;
+    }
+
+    if (mode === 'good') {
+      this.selectedEnquiryType.set('Goods Enquiry');
+      this.enquiryForm = this.fb.group({
+        name: ['', [Validators.required, Validators.minLength(2)]],
+        email: ['', [Validators.required, Validators.email]],
+        phone: ['', Validators.required],
+        enquiryType: [{ value: 'Goods Enquiry', disabled: true }, Validators.required],
         message: ['', [Validators.required, Validators.minLength(10)]],
       });
       return;
@@ -258,6 +339,7 @@ export class ContactComponent implements OnInit {
 
   private getContextEnquiryType(): EnquiryType | null {
     if (this.mode() === 'knife') return 'Knife Enquiry';
+    if (this.mode() === 'good') return 'Goods Enquiry';
     if (this.mode() === 'service') return this.preselectedService()?.enquiryType ?? null;
     return null;
   }

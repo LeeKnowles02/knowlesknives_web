@@ -1,0 +1,104 @@
+@if (loading()) {
+  <div class="container page-state-wrap">
+    <p class="page-state">Loading item…</p>
+  </div>
+} @else if (error()) {
+  <div class="container page-state-wrap">
+    <p class="page-state page-state--error">{{ error() }}</p>
+    <a routerLink="/goods" class="btn btn--primary">View All Goods</a>
+  </div>
+} @else if (notFound() || !good()) {
+  <div class="container page-state-wrap">
+    <p class="page-state">Item not found.</p>
+    <a routerLink="/goods" class="btn btn--primary">View All Goods</a>
+  </div>
+} @else {
+  @if (good(); as good) {
+    <section class="good-detail">
+      <div class="container">
+        <a routerLink="/goods" class="good-detail__back">&larr; Back to Goods</a>
+
+        <div class="good-detail__grid">
+          <div class="good-detail__gallery">
+            <div class="good-detail__main-image">
+              @if (selectedImage) {
+                <img [src]="selectedImage" [alt]="good.name" />
+              } @else {
+                <div class="good-detail__placeholder">No image available</div>
+              }
+            </div>
+            @if (galleryImages.length > 1) {
+              <div class="good-detail__thumbs">
+                @for (img of galleryImages; track img.imageUrl) {
+                  <button
+                    type="button"
+                    class="good-detail__thumb"
+                    [class.good-detail__thumb--active]="selectedImage === img.imageUrl"
+                    (click)="selectImage(img.imageUrl)"
+                  >
+                    <img [src]="img.imageUrl" [alt]="img.altText || good.name" />
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="good-detail__info">
+            <span class="badge badge--{{ good.availability | availabilityBadge }}">
+              {{ good.availability | availabilityLabel }}
+            </span>
+            <span class="good-detail__category">{{ good.category }}</span>
+            <h1 class="good-detail__title">{{ good.name }}</h1>
+            <p class="good-detail__price">{{ good.price | currencyZar }}</p>
+            <p class="good-detail__desc">{{ good.description }}</p>
+
+            <dl class="good-detail__specs">
+              @if (good.material) {
+                <div>
+                  <dt>Material</dt>
+                  <dd>{{ good.material }}</dd>
+                </div>
+              }
+              @if (good.finish) {
+                <div>
+                  <dt>Finish</dt>
+                  <dd>{{ good.finish }}</dd>
+                </div>
+              }
+              @if (good.dimensions) {
+                <div>
+                  <dt>Dimensions</dt>
+                  <dd>{{ good.dimensions }}</dd>
+                </div>
+              }
+              @if (good.personalization) {
+                <div>
+                  <dt>Personalization</dt>
+                  <dd>{{ good.personalization }}</dd>
+                </div>
+              }
+            </dl>
+
+            @if (good.notes) {
+              <p class="good-detail__notes"><strong>Note:</strong> {{ good.notes }}</p>
+            }
+
+            <div class="good-detail__notice">
+              Online payments are not available because each piece may be sold, reserved, or custom
+              made. Send an enquiry and we will confirm availability.
+            </div>
+
+            <div class="good-detail__cta">
+              <a
+                routerLink="/contact"
+                [queryParams]="{ goodId: good.id }"
+                class="btn btn--primary btn--full"
+                >Enquire About This Item</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+}

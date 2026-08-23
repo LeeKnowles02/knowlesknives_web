@@ -40,7 +40,7 @@ export class AdminGalleryComponent implements OnInit {
       });
   }
 
-  deactivate(id: string, title: string): void {
+  deactivate(id: number, title: string): void {
     if (confirm(`Hide "${title}" from the public gallery?`)) {
       this.galleryService
         .deactivateItem(id)
@@ -52,7 +52,7 @@ export class AdminGalleryComponent implements OnInit {
     }
   }
 
-  delete(id: string, title: string): void {
+  delete(id: number, title: string): void {
     if (confirm(`Permanently delete "${title}"?`)) {
       this.galleryService
         .deleteItem(id)

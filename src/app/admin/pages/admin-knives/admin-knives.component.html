@@ -4,7 +4,10 @@
 
     <h1>Knives</h1>
 
-    <p class="admin-page-header__desc">Manage knife listings, availability, and product details.</p>
+    <p class="admin-page-header__desc">
+      Manage knife listings, availability, and product details. Featured on homepage:
+      {{ featuredCount() }}/8
+    </p>
   </div>
 
   <div class="admin-page-header__actions">
@@ -33,6 +36,8 @@
 
           <th>Availability</th>
 
+          <th>Featured</th>
+
           <th>Actions</th>
         </tr>
       </thead>
@@ -60,6 +65,16 @@
               <span class="badge badge--{{ knife.availability | availabilityBadge }}">
                 {{ knife.availability | availabilityLabel }}
               </span>
+            </td>
+
+            <td>
+              @if (knife.featured && knife.active) {
+                <span class="admin-badge admin-badge--featured">
+                  Yes@if (knife.featuredOrder) { (#{{ knife.featuredOrder }}) }
+                </span>
+              } @else {
+                <span class="admin-badge admin-badge--inactive">No</span>
+              }
             </td>
 
             <td>

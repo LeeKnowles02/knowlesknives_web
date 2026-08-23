@@ -1,6 +1,6 @@
-import { Component, OnDestroy, signal } from '@angular/core';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Component, OnDestroy, PLATFORM_ID, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-public-header',
@@ -10,11 +10,15 @@ import { CommonModule } from '@angular/common';
   styleUrl: './public-header.component.scss',
 })
 export class PublicHeaderComponent implements OnDestroy {
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
+
   menuOpen = signal(false);
 
   readonly navLinks = [
     { path: '/', label: 'Home', exact: true },
     { path: '/knives', label: 'Knives', exact: false },
+    { path: '/goods', label: 'Goods', exact: false },
     { path: '/services', label: 'Services', exact: false },
     { path: '/gallery', label: 'Gallery', exact: false },
     { path: '/about', label: 'About', exact: false },
@@ -32,10 +36,18 @@ export class PublicHeaderComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    document.body.classList.remove('nav-open');
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    this.document.body.classList.remove('nav-open');
   }
 
   private syncBodyScroll(): void {
-    document.body.classList.toggle('nav-open', this.menuOpen());
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    this.document.body.classList.toggle('nav-open', this.menuOpen());
   }
 }

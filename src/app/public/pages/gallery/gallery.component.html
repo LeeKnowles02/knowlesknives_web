@@ -18,12 +18,45 @@
     } @else {
       <div class="masonry">
         @for (item of items(); track item.id; let i = $index) {
-          <figure class="masonry__item" [class.masonry__item--tall]="i % 3 === 0">
-            <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
-            <figcaption>{{ item.title }}</figcaption>
-          </figure>
+          <button
+            type="button"
+            class="masonry__button"
+            (click)="openLightbox(item)"
+            [attr.aria-label]="'Open image: ' + item.title"
+          >
+            <figure class="masonry__item" [class.masonry__item--tall]="i % 3 === 0">
+              <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+              <figcaption>{{ item.title }}</figcaption>
+            </figure>
+          </button>
         }
       </div>
     }
   </div>
 </section>
+
+@if (selectedItem(); as item) {
+  <div class="lightbox" role="dialog" aria-modal="true" [attr.aria-label]="item.title">
+    <button
+      type="button"
+      class="lightbox__backdrop"
+      aria-label="Close image"
+      (click)="closeLightbox()"
+    ></button>
+    <div class="lightbox__content">
+      <button
+        type="button"
+        class="lightbox__close"
+        aria-label="Close image"
+        (click)="closeLightbox()"
+      >
+        &times;
+      </button>
+      <img [src]="item.imageUrl" [alt]="item.title" />
+      <div class="lightbox__caption">
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.category }}</p>
+      </div>
+    </div>
+  </div>
+}

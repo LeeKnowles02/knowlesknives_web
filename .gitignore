@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Local debug output
+/_serve_err.txt
+/_serve_out.txt
+/_terr.txt
+/_tout.txt
