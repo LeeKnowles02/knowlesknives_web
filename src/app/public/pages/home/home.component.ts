@@ -1,8 +1,10 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   DestroyRef,
   HostListener,
   OnInit,
+  PLATFORM_ID,
   computed,
   inject,
   signal,
@@ -33,6 +35,7 @@ export class HomeComponent implements OnInit {
   private readonly galleryService = inject(GalleryService);
   private readonly seo = inject(SeoService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly platformId = inject(PLATFORM_ID);
 
   featuredKnives = signal<Knife[]>([]);
   carouselIndex = signal(0);
@@ -150,6 +153,10 @@ export class HomeComponent implements OnInit {
   }
 
   private updateItemsPerView(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     const perView = window.innerWidth < 768 ? 1 : 3;
     this.itemsPerView.set(perView);
 
