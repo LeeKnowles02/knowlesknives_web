@@ -3,6 +3,6 @@ builder = "NIXPACKS"
 buildCommand = "npm run build"
 
 [deploy]
-startCommand = "npm run serve:ssr"
+startCommand = "npm run serve:static"
 healthcheckPath = "/"
 restartPolicyType = "ON_FAILURE"
