@@ -56,6 +56,11 @@
       <div class="lightbox__caption">
         <h2>{{ item.title }}</h2>
         <p>{{ item.category }}</p>
+        @if (item.linkUrl) {
+          <a [routerLink]="item.linkUrl" class="lightbox__link" (click)="closeLightbox()">
+            View {{ item.sourceType === 'knife' ? 'knife' : 'services' }}
+          </a>
+        }
       </div>
     </div>
   </div>

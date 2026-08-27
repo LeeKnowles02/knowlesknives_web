@@ -1,12 +1,12 @@
 <div class="admin-page-header">
   <div>
     <span class="admin-page-header__eyebrow">Admin</span>
-    <h1>{{ isEditMode ? 'Edit Gallery Item' : 'Add Gallery Item' }}</h1>
+    <h1>{{ isEditMode ? 'Edit Workshop Photo' : 'Add Workshop Photo' }}</h1>
     <p class="admin-page-header__desc">
       {{
         isEditMode
-          ? 'Update image, title, and visibility on the public gallery.'
-          : 'Add a new image to the public gallery.'
+          ? 'Update this extra gallery image. Knife and service photos are managed on their own forms.'
+          : 'Add a workshop or process photo. Knife and service primary images appear in the gallery automatically.'
       }}
     </p>
   </div>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="form-group form-grid__full">
-      <app-image-picker formControlName="imageUrl" label="Gallery Image" [required]="true" />
+      <app-image-picker formControlName="imageUrl" label="Workshop Photo" [required]="true" />
       @if (isInvalid('imageUrl')) {
         <span class="error">Required</span>
       }
@@ -58,6 +58,6 @@
   }
 
   <button type="submit" class="admin-btn admin-btn--primary">
-    {{ isEditMode ? 'Update Item' : 'Add to Gallery' }}
+    {{ isEditMode ? 'Update Photo' : 'Add Photo' }}
   </button>
 </form>

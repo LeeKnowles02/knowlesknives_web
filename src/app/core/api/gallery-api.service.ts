@@ -1,14 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiClientService } from './api-client.service';
-import { GalleryItem, GalleryItemPayload } from '../models/gallery-item.model';
+import { GalleryItem, GalleryItemPayload, PublicGalleryItem } from '../models/gallery-item.model';
 
 @Injectable({ providedIn: 'root' })
 export class GalleryApiService {
   private readonly api = inject(ApiClientService);
 
-  getActive(): Observable<GalleryItem[]> {
-    return this.api.get<GalleryItem[]>('/gallery');
+  getActive(): Observable<PublicGalleryItem[]> {
+    return this.api.get<PublicGalleryItem[]>('/gallery');
   }
 
   getAdminItems(): Observable<GalleryItem[]> {

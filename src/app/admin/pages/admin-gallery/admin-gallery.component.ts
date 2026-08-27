@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { GalleryService } from '../../../core/services/gallery.service';
-import { GalleryItem } from '../../../core/models/gallery-item.model';
+import { AdminGalleryItem } from '../../../core/models/gallery-item.model';
 
 @Component({
   selector: 'app-admin-gallery',
@@ -17,7 +17,7 @@ export class AdminGalleryComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
-  items = signal<GalleryItem[]>([]);
+  items = signal<AdminGalleryItem[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
 
@@ -28,7 +28,7 @@ export class AdminGalleryComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
-        next: (items) => {
+        next: (items: AdminGalleryItem[]) => {
           this.items.set(items);
           this.loading.set(false);
           this.error.set(null);
@@ -40,10 +40,10 @@ export class AdminGalleryComponent implements OnInit {
       });
   }
 
-  deactivate(id: number, title: string): void {
-    if (confirm(`Hide "${title}" from the public gallery?`)) {
+  deactivate(item: AdminGalleryItem): void {
+    if (confirm(`Hide "${item.title}" from the public gallery?`)) {
       this.galleryService
-        .deactivateItem(id)
+        .deactivateItem(item.id)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => this.refresh$.next(),
@@ -52,10 +52,10 @@ export class AdminGalleryComponent implements OnInit {
     }
   }
 
-  delete(id: number, title: string): void {
-    if (confirm(`Permanently delete "${title}"?`)) {
+  delete(item: AdminGalleryItem): void {
+    if (confirm(`Permanently delete "${item.title}"?`)) {
       this.galleryService
-        .deleteItem(id)
+        .deleteItem(item.id)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => this.refresh$.next(),

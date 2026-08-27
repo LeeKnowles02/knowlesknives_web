@@ -8,12 +8,6 @@
     gap: clamp(2rem, 5vw, 3.5rem);
     align-items: start;
 
-    &--compact {
-      grid-template-columns: 1fr;
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
     @media (max-width: $bp-md) {
       grid-template-columns: 1fr;
     }

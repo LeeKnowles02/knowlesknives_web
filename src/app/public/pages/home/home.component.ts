@@ -18,7 +18,7 @@ import { KnifeCardComponent } from '../../components/knife-card/knife-card.compo
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
 import { Knife } from '../../../core/models/knife.model';
 import { Service } from '../../../core/models/service.model';
-import { GalleryItem } from '../../../core/models/gallery-item.model';
+import { PublicGalleryItem } from '../../../core/models/gallery-item.model';
 import { SeoService } from '../../../core/services/seo.service';
 import { environment } from '../../../../environments/environment';
 
@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   carouselIndex = signal(0);
   itemsPerView = signal(3);
   services = signal<Service[]>([]);
-  galleryPreview = signal<GalleryItem[]>([]);
+  galleryPreview = signal<PublicGalleryItem[]>([]);
   knivesLoading = signal(true);
   servicesLoading = signal(true);
   galleryLoading = signal(true);

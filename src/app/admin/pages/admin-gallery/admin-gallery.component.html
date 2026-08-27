@@ -2,10 +2,13 @@
   <div>
     <span class="admin-page-header__eyebrow">Admin</span>
     <h1>Gallery</h1>
-    <p class="admin-page-header__desc">Manage images shown on the public gallery page.</p>
+    <p class="admin-page-header__desc">
+      Add extra workshop photos here. Knife and service images appear in the public gallery
+      automatically from their primary photo.
+    </p>
   </div>
   <div class="admin-page-header__actions">
-    <a routerLink="/admin/gallery/new" class="admin-btn admin-btn--primary">Add Gallery Item</a>
+    <a routerLink="/admin/gallery/new" class="admin-btn admin-btn--primary">Add Workshop Photo</a>
   </div>
 </div>
 
@@ -57,7 +60,7 @@
                   <button
                     type="button"
                     class="admin-btn admin-btn--secondary admin-btn--sm"
-                    (click)="deactivate(item.id, item.title)"
+                    (click)="deactivate(item)"
                   >
                     Hide
                   </button>
@@ -65,7 +68,7 @@
                 <button
                   type="button"
                   class="admin-btn admin-btn--danger admin-btn--sm"
-                  (click)="delete(item.id, item.title)"
+                  (click)="delete(item)"
                 >
                   Delete
                 </button>

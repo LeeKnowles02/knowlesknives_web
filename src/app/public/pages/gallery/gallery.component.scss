@@ -132,4 +132,16 @@
       color: rgba($color-cream, 0.78);
     }
   }
+
+  &__link {
+    display: inline-block;
+    margin-top: 0.75rem;
+    color: $color-accent;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

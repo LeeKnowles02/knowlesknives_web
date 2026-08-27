@@ -99,7 +99,7 @@ export class ContactComponent implements OnInit {
       path: '/contact',
     });
 
-    this.buildForm('general');
+    this.initializeModeFromParams(this.route.snapshot.queryParamMap);
 
     this.route.queryParamMap
       .pipe(
@@ -270,6 +270,37 @@ export class ContactComponent implements OnInit {
         this.enquiryForm.get('enquiryType')?.setValue(this.preselectedService()!.enquiryType);
       }
     }
+  }
+
+  private initializeModeFromParams(params: {
+    get: (name: string) => string | null;
+  }): void {
+    const knifeId = params.get('knifeId');
+    const goodId = params.get('goodId');
+    const serviceId = params.get('serviceId');
+    const enquiryType = params.get('enquiryType') as EnquiryType | null;
+
+    if (knifeId) {
+      this.mode.set('knife');
+      this.buildForm('knife');
+      return;
+    }
+
+    if (goodId) {
+      this.mode.set('good');
+      this.buildForm('good');
+      return;
+    }
+
+    if (serviceId) {
+      this.mode.set('service');
+      const type =
+        enquiryType && ENQUIRY_TYPE_VALUES.includes(enquiryType) ? enquiryType : 'General';
+      this.buildForm('service', type);
+      return;
+    }
+
+    this.setGeneralMode(enquiryType);
   }
 
   private setGeneralMode(enquiryType: EnquiryType | null): void {

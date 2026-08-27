@@ -23,37 +23,35 @@
         </button>
       </div>
     } @else {
-      <div class="contact__grid" [class.contact__grid--compact]="mode() !== 'general'">
-        @if (mode() === 'general') {
-          <aside class="contact__info">
-            <h2>How It Works</h2>
-            <ol class="contact__steps">
-              <li><strong>Send your enquiry</strong> — tell us what you're looking for.</li>
-              <li>
-                <strong>We review availability</strong> — each piece may be available, reserved, or
-                made to order.
-              </li>
-              <li>
-                <strong>We contact you</strong> — personally, to confirm pricing, timing, and next
-                steps.
-              </li>
-            </ol>
-            <div class="contact__cards">
-              <div class="contact__card">
-                <span class="contact__card-label">Email</span>
-                <span>gordon-k&#64;live.com</span>
-              </div>
-              <div class="contact__card">
-                <span class="contact__card-label">Service area</span>
-                <span>Randburg &amp; Johannesburg</span>
-              </div>
+      <div class="contact__grid">
+        <aside class="contact__info">
+          <h2>How It Works</h2>
+          <ol class="contact__steps">
+            <li><strong>Send your enquiry</strong> — tell us what you're looking for.</li>
+            <li>
+              <strong>We review availability</strong> — each piece may be available, reserved, or
+              made to order.
+            </li>
+            <li>
+              <strong>We contact you</strong> — personally, to confirm pricing, timing, and next
+              steps.
+            </li>
+          </ol>
+          <div class="contact__cards">
+            <div class="contact__card">
+              <span class="contact__card-label">Email</span>
+              <span>gordon-k&#64;live.com</span>
             </div>
-            <p class="contact__note">
-              We never take payment through this website. All purchases are confirmed by direct
-              enquiry.
-            </p>
-          </aside>
-        }
+            <div class="contact__card">
+              <span class="contact__card-label">Service area</span>
+              <span>Randburg &amp; Johannesburg</span>
+            </div>
+          </div>
+          <p class="contact__note">
+            We never take payment through this website. All purchases are confirmed by direct
+            enquiry.
+          </p>
+        </aside>
 
         <div class="contact__form-wrap">
           <div class="contact__form-header">

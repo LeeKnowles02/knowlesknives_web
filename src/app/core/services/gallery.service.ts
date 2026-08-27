@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map, switchMap } from 'rxjs';
 import { GalleryApiService } from '../api/gallery-api.service';
-import { GalleryItem, GalleryItemPayload } from '../models/gallery-item.model';
+import { GalleryItem, GalleryItemPayload, PublicGalleryItem } from '../models/gallery-item.model';
 
 @Injectable({ providedIn: 'root' })
 export class GalleryService {
@@ -11,11 +11,11 @@ export class GalleryService {
     return this.galleryApi.getAdminItems();
   }
 
-  getActive(): Observable<GalleryItem[]> {
+  getActive(): Observable<PublicGalleryItem[]> {
     return this.galleryApi.getActive();
   }
 
-  getPreview(count = 4): Observable<GalleryItem[]> {
+  getPreview(count = 4): Observable<PublicGalleryItem[]> {
     return this.getActive().pipe(map((items) => items.slice(0, count)));
   }
 

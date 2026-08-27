@@ -1,13 +1,14 @@
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { GalleryService } from '../../../core/services/gallery.service';
-import { GalleryItem } from '../../../core/models/gallery-item.model';
+import { PublicGalleryItem } from '../../../core/models/gallery-item.model';
 import { SeoService } from '../../../core/services/seo.service';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.scss',
 })
@@ -16,10 +17,10 @@ export class GalleryComponent implements OnInit {
   private readonly seo = inject(SeoService);
   private readonly destroyRef = inject(DestroyRef);
 
-  items = signal<GalleryItem[]>([]);
+  items = signal<PublicGalleryItem[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
-  selectedItem = signal<GalleryItem | null>(null);
+  selectedItem = signal<PublicGalleryItem | null>(null);
 
   ngOnInit(): void {
     this.seo.update({
@@ -44,7 +45,7 @@ export class GalleryComponent implements OnInit {
       });
   }
 
-  openLightbox(item: GalleryItem): void {
+  openLightbox(item: PublicGalleryItem): void {
     this.selectedItem.set(item);
   }
 
