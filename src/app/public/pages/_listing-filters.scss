@@ -1,0 +1,75 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  @include card-surface;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem 0.75rem;
+    padding: 0.875rem;
+    margin-bottom: 1rem;
+
+    .filters__group:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__group {
+    min-width: 0;
+
+    label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+      color: $color-steel;
+    }
+
+    input {
+      @include form-control;
+      padding: 0.65rem 0.85rem;
+    }
+
+    app-select-field {
+      display: block;
+    }
+
+    @media (max-width: $bp-md) {
+      label {
+        margin-bottom: 0.25rem;
+        font-size: 0.62rem;
+        letter-spacing: 0.06em;
+      }
+
+      input {
+        min-height: 2.75rem;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.9375rem;
+      }
+
+    }
+  }
+
+  &__clear {
+    @media (max-width: $bp-md) {
+      width: 100%;
+      min-height: 2.75rem;
+      align-self: end;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.72rem;
+    }
+  }
+}

@@ -84,7 +84,7 @@ export class HomeComponent implements OnInit {
         '@type': 'LocalBusiness',
         name: 'Knowles Knives',
         url: environment.siteUrl,
-        image: `${environment.siteUrl}/assets/images/knife-hero.png`,
+        image: `${environment.siteUrl}/assets/images/knife-hero-1920.jpg`,
         description:
           'Custom knife maker based near Randburg, Johannesburg. Handmade knives, bespoke commissions, engraving, and knife-making courses by appointment.',
         areaServed: ['Randburg', 'Johannesburg', 'South Africa'],

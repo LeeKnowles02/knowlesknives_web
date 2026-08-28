@@ -26,33 +26,25 @@
       <div class="filters__group">
         <label for="category">Category</label>
 
-        <select
+        <app-select-field
           id="category"
+          emptyLabel="All Categories"
+          [options]="categoryOptions()"
           [ngModel]="category()"
           (ngModelChange)="category.set($event); onFilterChange()"
-        >
-          <option value="">All Categories</option>
-
-          @for (cat of categories(); track cat) {
-            <option [value]="cat">{{ cat }}</option>
-          }
-        </select>
+        />
       </div>
 
       <div class="filters__group">
         <label for="availability">Availability</label>
 
-        <select
+        <app-select-field
           id="availability"
+          emptyLabel="All"
+          [options]="availabilityOptions"
           [ngModel]="availability()"
           (ngModelChange)="availability.set($event); onFilterChange()"
-        >
-          <option value="">All</option>
-
-          @for (avail of availabilities; track avail) {
-            <option [value]="avail">{{ avail }}</option>
-          }
-        </select>
+        />
       </div>
 
       <div class="filters__group">

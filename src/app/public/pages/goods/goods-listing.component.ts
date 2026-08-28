@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { GoodApiService, GoodFilters } from '../../../core/api/good-api.service';
@@ -9,12 +9,15 @@ import {
   GOOD_AVAILABILITY_VALUES,
 } from '../../../core/models/good.model';
 import { parseGoodPrice } from '../../../shared/utils/good-images.util';
+import { availabilityFilterLabel } from '../../../shared/pipes/availability.pipe';
 import { SeoService } from '../../../core/services/seo.service';
+import { SelectFieldComponent } from '../../../shared/components/select-field/select-field.component';
+import { SelectOption } from '../../../shared/models/select-option.model';
 
 @Component({
   selector: 'app-goods-listing',
   standalone: true,
-  imports: [FormsModule, GoodCardComponent],
+  imports: [FormsModule, GoodCardComponent, SelectFieldComponent],
   templateUrl: './goods-listing.component.html',
   styleUrl: './goods-listing.component.scss',
 })
@@ -32,7 +35,14 @@ export class GoodsListingComponent implements OnInit {
   search = signal('');
   maxPrice = signal<number | null>(null);
 
-  readonly availabilities = GOOD_AVAILABILITY_VALUES;
+  readonly availabilityOptions: SelectOption[] = GOOD_AVAILABILITY_VALUES.map((value) => ({
+    value,
+    label: availabilityFilterLabel(value),
+  }));
+
+  readonly categoryOptions = computed(() =>
+    this.categories().map((category) => ({ value: category, label: category })),
+  );
 
   ngOnInit(): void {
     this.seo.update({

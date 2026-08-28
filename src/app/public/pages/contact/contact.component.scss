@@ -10,6 +10,14 @@
 
     @media (max-width: $bp-md) {
       grid-template-columns: 1fr;
+
+      .contact__form-wrap {
+        order: 1;
+      }
+
+      .contact__info {
+        order: 2;
+      }
     }
   }
 

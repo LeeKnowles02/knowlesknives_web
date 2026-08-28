@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KnifeApiService, KnifeFilters } from '../../../core/api/knife-api.service';
@@ -9,12 +9,15 @@ import {
   KNIFE_AVAILABILITY_VALUES,
 } from '../../../core/models/knife.model';
 import { parseKnifePrice } from '../../../shared/utils/knife-images.util';
+import { availabilityFilterLabel } from '../../../shared/pipes/availability.pipe';
 import { SeoService } from '../../../core/services/seo.service';
+import { SelectFieldComponent } from '../../../shared/components/select-field/select-field.component';
+import { SelectOption } from '../../../shared/models/select-option.model';
 
 @Component({
   selector: 'app-knives-listing',
   standalone: true,
-  imports: [FormsModule, KnifeCardComponent],
+  imports: [FormsModule, KnifeCardComponent, SelectFieldComponent],
   templateUrl: './knives-listing.component.html',
   styleUrl: './knives-listing.component.scss',
 })
@@ -32,7 +35,14 @@ export class KnivesListingComponent implements OnInit {
   search = signal('');
   maxPrice = signal<number | null>(null);
 
-  readonly availabilities = KNIFE_AVAILABILITY_VALUES;
+  readonly availabilityOptions: SelectOption[] = KNIFE_AVAILABILITY_VALUES.map((value) => ({
+    value,
+    label: availabilityFilterLabel(value),
+  }));
+
+  readonly categoryOptions = computed(() =>
+    this.categories().map((category) => ({ value: category, label: category })),
+  );
 
   ngOnInit(): void {
     this.seo.update({

@@ -33,7 +33,7 @@
       ></button>
     }
 
-    <nav class="header__nav" [class.header__nav--open]="menuOpen()">
+    <nav class="header__nav" [class.header__nav--open]="menuOpen()" [attr.aria-hidden]="!menuOpen()">
       @for (link of navLinks; track link.path) {
         <a
           [routerLink]="link.path"

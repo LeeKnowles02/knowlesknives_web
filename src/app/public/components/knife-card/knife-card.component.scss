@@ -137,13 +137,61 @@
   }
 
   @include mobile {
+    &:hover {
+      transform: none;
+      box-shadow: $shadow-sm;
+    }
+
+    &__image {
+      aspect-ratio: 1;
+    }
+
+    &__badge {
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.2rem 0.45rem;
+      font-size: 0.58rem;
+    }
+
+    &__body {
+      padding: 0.75rem 0.65rem 0.85rem;
+    }
+
+    &__category {
+      font-size: 0.58rem;
+    }
+
+    &__title {
+      font-size: 0.92rem;
+      margin: 0.2rem 0 0.35rem;
+      line-height: 1.25;
+
+      a {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+
+    &__desc {
+      display: none;
+    }
+
     &__footer {
       flex-direction: column;
-      align-items: stretch;
+      align-items: flex-start;
+      padding-top: 0;
+      border-top: 0;
+      gap: 0;
+    }
+
+    &__price {
+      font-size: 0.95rem;
     }
 
     &__btn {
-      width: 100%;
+      display: none;
     }
   }
 }

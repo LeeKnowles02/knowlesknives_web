@@ -1,11 +1,24 @@
 <section class="hero">
   <div class="hero__bg">
-    <img
-      src="assets/images/knife-hero.png"
-      alt=""
-      class="hero__bg-img"
-      fetchpriority="high"
-    />
+    <picture>
+      <source
+        media="(min-width: 1280px)"
+        srcset="assets/images/knife-hero-1920.jpg"
+      />
+      <source
+        media="(min-width: 768px)"
+        srcset="assets/images/knife-hero-1280.jpg"
+      />
+      <img
+        src="assets/images/knife-hero-960.jpg"
+        alt=""
+        class="hero__bg-img"
+        fetchpriority="high"
+        decoding="async"
+        width="1920"
+        height="1440"
+      />
+    </picture>
     <div class="hero__overlay"></div>
     <div class="hero__vignette"></div>
   </div>

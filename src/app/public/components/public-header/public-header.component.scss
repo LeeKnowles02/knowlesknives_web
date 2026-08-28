@@ -7,15 +7,13 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: rgba($color-black, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba($color-black, 0.94);
   border-bottom: 1px solid rgba($color-cream, 0.06);
   height: $header-height;
   transition: background-color $transition;
 
   &--menu-open {
-    background-color: rgba($color-black, 0.96);
+    background-color: rgba($color-black, 0.98);
   }
 
   &__inner {
@@ -163,12 +161,18 @@
       background-color: $color-charcoal;
       border-left: 1px solid rgba($color-cream, 0.08);
       transform: translateX(100%);
-      transition: transform $transition;
+      transition:
+        transform $transition,
+        visibility $transition;
       z-index: 1001;
       overflow-y: auto;
+      pointer-events: none;
+      visibility: hidden;
 
       &--open {
         transform: translateX(0);
+        pointer-events: auto;
+        visibility: visible;
       }
     }
 

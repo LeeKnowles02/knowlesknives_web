@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use 'mixins' as *;
 
 // Knowles Knives — Admin panel styles (global, scoped by class prefix)
 
@@ -691,11 +692,12 @@ img.admin-thumb {
     }
 
     select {
-      padding: 0.4rem 0.75rem;
-      border: 1px solid $admin-border;
-      border-radius: 8px;
+      @include select-control;
+      min-height: 2.25rem;
+      padding: 0.45rem 2.25rem 0.45rem 0.75rem;
       font-size: 0.85rem;
-      min-height: 36px;
+      background-position: right 0.65rem center;
+      background-size: 0.9rem;
     }
   }
 }
