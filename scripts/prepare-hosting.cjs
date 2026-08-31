@@ -7,12 +7,23 @@ const routesPath = path.join(projectRoot, 'routes.txt');
 const sitemapPath = path.join(publicDir, 'sitemap.xml');
 const robotsPath = path.join(publicDir, 'robots.txt');
 
+const DEFAULT_SITE_URL = 'https://knowlesknives.co.za';
 const siteUrl = normalizeSiteUrl(
-  process.env.SITE_URL || process.env.PUBLIC_SITE_URL || 'https://REPLACE_WITH_CODE_CAPSULES_URL',
+  process.env.SITE_URL || process.env.PUBLIC_SITE_URL || DEFAULT_SITE_URL,
 );
 const apiUrl = normalizeApiUrl(process.env.API_URL || 'http://localhost:5000/api');
+const isProductionBuild = process.env.NODE_ENV === 'production' || process.argv.includes('--production');
 
-const staticRoutes = ['/', '/knives', '/services', '/gallery', '/about', '/contact', '/404'];
+const staticRoutes = [
+  '/',
+  '/knives',
+  '/goods',
+  '/services',
+  '/gallery',
+  '/about',
+  '/contact',
+  '/404',
+];
 
 main().catch((error) => {
   console.error(error);
@@ -20,37 +31,52 @@ main().catch((error) => {
 });
 
 async function main() {
-  const knifeRoutes = await getKnifeRoutes();
-  const routes = uniqueRoutes([...staticRoutes, ...knifeRoutes]);
+  if (isProductionBuild && siteUrl.includes('REPLACE_WITH')) {
+    throw new Error('SITE_URL must be set to the production domain before building.');
+  }
+
+  const [knifeRoutes, goodRoutes] = await Promise.all([getKnifeRoutes(), getGoodRoutes()]);
+  const routes = uniqueRoutes([...staticRoutes, ...knifeRoutes, ...goodRoutes]);
 
   await fs.writeFile(routesPath, `${routes.join('\n')}\n`);
   await fs.writeFile(sitemapPath, buildSitemap(routes));
   await fs.writeFile(robotsPath, buildRobots());
 
-  console.log(`Prepared ${routes.length} prerender routes.`);
+  console.log(`Prepared ${routes.length} routes for hosting.`);
   console.log(`Site URL: ${siteUrl}`);
   if (knifeRoutes.length === 0) {
     console.log('No knife routes were added. Start the API or set API_URL to include knife slugs.');
   }
+  if (goodRoutes.length === 0) {
+    console.log('No goods routes were added. Start the API or set API_URL to include goods slugs.');
+  }
 }
 
 async function getKnifeRoutes() {
+  return getSlugRoutes('/knives', 'knives');
+}
+
+async function getGoodRoutes() {
+  return getSlugRoutes('/goods', 'goods');
+}
+
+async function getSlugRoutes(prefix, endpoint) {
   try {
-    const response = await fetch(`${apiUrl}/knives`);
+    const response = await fetch(`${apiUrl}/${endpoint}`);
 
     if (!response.ok) {
-      throw new Error(`Knife API returned ${response.status}`);
+      throw new Error(`${endpoint} API returned ${response.status}`);
     }
 
     const body = await response.json();
-    const knives = Array.isArray(body?.data) ? body.data : Array.isArray(body) ? body : [];
+    const items = Array.isArray(body?.data) ? body.data : Array.isArray(body) ? body : [];
 
-    return knives
-      .map((knife) => knife?.slug)
+    return items
+      .map((item) => item?.slug)
       .filter((slug) => typeof slug === 'string' && slug.trim().length > 0)
-      .map((slug) => `/knives/${slug.trim()}`);
+      .map((slug) => `${prefix}/${slug.trim()}`);
   } catch (error) {
-    console.warn(`Could not fetch knife slugs from ${apiUrl}/knives.`);
+    console.warn(`Could not fetch ${endpoint} slugs from ${apiUrl}/${endpoint}.`);
     console.warn(error instanceof Error ? error.message : error);
     return [];
   }
@@ -60,8 +86,19 @@ function buildSitemap(routes) {
   const urls = routes
     .filter((route) => route !== '/404')
     .map((route) => {
-      const priority = route === '/' ? '1.0' : route.startsWith('/knives/') ? '0.8' : '0.7';
-      const changefreq = route === '/' || route.startsWith('/knives') || route === '/gallery' ? 'weekly' : 'monthly';
+      const priority =
+        route === '/'
+          ? '1.0'
+          : route.startsWith('/knives/') || route.startsWith('/goods/')
+            ? '0.8'
+            : '0.7';
+      const changefreq =
+        route === '/' ||
+        route.startsWith('/knives') ||
+        route.startsWith('/goods') ||
+        route === '/gallery'
+          ? 'weekly'
+          : 'monthly';
 
       return [
         '  <url>',

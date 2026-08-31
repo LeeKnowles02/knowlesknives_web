@@ -92,12 +92,7 @@ export class ContactComponent implements OnInit {
   private typeSub?: Subscription;
 
   ngOnInit(): void {
-    this.seo.update({
-      title: 'Contact Knowles Knives | Randburg & Johannesburg Enquiries',
-      description:
-        'Contact Knowles Knives for custom knife enquiries in Randburg and Johannesburg. By appointment — no online payments.',
-      path: '/contact',
-    });
+    this.updateDefaultSeo();
 
     this.initializeModeFromParams(this.route.snapshot.queryParamMap);
 
@@ -151,6 +146,7 @@ export class ContactComponent implements OnInit {
             this.preselectedGood.set(null);
             this.preselectedService.set(null);
             this.buildForm('knife');
+            this.updateContextSeo(`Enquire: ${result.knife.name} | Knowles Knives`, result.knife.name);
           } else {
             this.setGeneralMode(result.enquiryType);
           }
@@ -164,6 +160,7 @@ export class ContactComponent implements OnInit {
             this.preselectedKnife.set(null);
             this.preselectedService.set(null);
             this.buildForm('good');
+            this.updateContextSeo(`Enquire: ${result.good.name} | Knowles Knives`, result.good.name);
           } else {
             this.setGeneralMode(result.enquiryType);
           }
@@ -177,6 +174,10 @@ export class ContactComponent implements OnInit {
             this.preselectedKnife.set(null);
             this.preselectedGood.set(null);
             this.buildForm('service', result.service.enquiryType);
+            this.updateContextSeo(
+              `Enquire: ${result.service.title} | Knowles Knives`,
+              result.service.title,
+            );
           } else {
             this.setGeneralMode(result.enquiryType);
           }
@@ -310,6 +311,26 @@ export class ContactComponent implements OnInit {
     this.preselectedService.set(null);
     const type = enquiryType && ENQUIRY_TYPE_VALUES.includes(enquiryType) ? enquiryType : 'General';
     this.buildForm('general', type);
+    this.updateDefaultSeo();
+  }
+
+  private updateDefaultSeo(): void {
+    this.seo.update({
+      title: 'Contact Knowles Knives | Randburg, Johannesburg',
+      description:
+        'Contact Knowles Knives for custom knives, engraving, courses, and repairs near Randburg and Johannesburg. By appointment — no online payments.',
+      path: '/contact',
+      canonicalPath: '/contact',
+    });
+  }
+
+  private updateContextSeo(title: string, subject: string): void {
+    this.seo.update({
+      title,
+      description: `Ask about ${subject} — availability, pricing, and lead times from Knowles Knives near Randburg and Johannesburg.`,
+      path: '/contact',
+      canonicalPath: '/contact',
+    });
   }
 
   private buildForm(mode: EnquiryMode, enquiryType: EnquiryType = 'General'): void {

@@ -10,10 +10,15 @@ import {
   AvailabilityBadgePipe,
 } from '../../../shared/pipes/availability.pipe';
 import { CurrencyZarPipe } from '../../../shared/pipes/currency-zar.pipe';
-import { getGoodImages } from '../../../shared/utils/good-images.util';
+import { getGoodImages, parseGoodPrice } from '../../../shared/utils/good-images.util';
 import { GoodImage } from '../../../core/models/good-image.model';
 import { SeoService } from '../../../core/services/seo.service';
-import { environment } from '../../../../environments/environment';
+import {
+  buildBreadcrumbJsonLd,
+  buildProductJsonLd,
+  truncateDescription,
+} from '../../../core/services/seo.util';
+import { HttpStatusService } from '../../../core/services/http-status.service';
 
 @Component({
   selector: 'app-good-details',
@@ -26,6 +31,7 @@ export class GoodDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly goodApi = inject(GoodApiService);
   private readonly seo = inject(SeoService);
+  private readonly httpStatus = inject(HttpStatusService);
   private readonly destroyRef = inject(DestroyRef);
 
   good = signal<Good | null>(null);
@@ -65,12 +71,14 @@ export class GoodDetailsComponent implements OnInit {
       .subscribe((good) => {
         if (good === undefined) {
           this.loading.set(false);
+          this.updateErrorSeo();
           return;
         }
 
         if (good === null) {
           this.notFound.set(true);
           this.loading.set(false);
+          this.updateNotFoundSeo();
           return;
         }
 
@@ -87,41 +95,57 @@ export class GoodDetailsComponent implements OnInit {
   }
 
   private updateSeo(good: Good): void {
-    const image = this.galleryImages[0]?.imageUrl ?? 'assets/images/knife-hero.png';
+    const image = this.galleryImages[0]?.imageUrl ?? undefined;
     const sourceDescription =
-      good.description ??
       good.shortDescription ??
+      good.description ??
       `${good.category} piece from Knowles Knives.`;
-    const description =
-      sourceDescription.length > 155 ? `${sourceDescription.slice(0, 152)}...` : sourceDescription;
+    const description = truncateDescription(sourceDescription);
+    const path = `/goods/${good.slug}`;
 
     this.seo.update({
-      title: `${good.name} — ${good.category} | Knowles Knives`,
+      title: `${good.name} | ${good.category} | Knowles Knives`,
       description,
-      path: `/goods/${good.slug}`,
+      path,
       image,
       type: 'product',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'Product',
-        name: good.name,
-        description,
-        image: image.startsWith('http') ? image : `${environment.siteUrl}/${image}`,
-        brand: {
-          '@type': 'Brand',
-          name: 'Knowles Knives',
-        },
-        category: good.category,
-        offers: {
-          '@type': 'Offer',
-          availability:
-            good.availability === 'Available'
-              ? 'https://schema.org/InStock'
-              : 'https://schema.org/LimitedAvailability',
-          priceCurrency: 'ZAR',
-          url: `${environment.siteUrl}/goods/${good.slug}`,
-        },
-      },
+      jsonLd: [
+        buildProductJsonLd({
+          name: good.name,
+          description,
+          path,
+          image,
+          category: good.category,
+          price: parseGoodPrice(good.price),
+          availability: good.availability,
+        }),
+        buildBreadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Goods', path: '/goods' },
+          { name: good.name, path },
+        ]),
+      ],
+    });
+  }
+
+  private updateNotFoundSeo(): void {
+    this.httpStatus.setStatus(404);
+    this.seo.update({
+      title: 'Item Not Found | Knowles Knives',
+      description:
+        'This item could not be found. Browse engraved gifts from Knowles Knives or send an enquiry.',
+      path: '/goods',
+      robots: 'noindex, follow',
+    });
+  }
+
+  private updateErrorSeo(): void {
+    this.seo.update({
+      title: 'Item Unavailable | Knowles Knives',
+      description:
+        'This item page could not be loaded right now. Browse goods from Knowles Knives or try again later.',
+      path: '/goods',
+      robots: 'noindex, follow',
     });
   }
 }

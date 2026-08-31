@@ -3,7 +3,8 @@
     <h1 class="page-hero__title">Our Goods</h1>
 
     <p class="page-hero__subtitle">
-      Engraved and handcrafted pieces — enquire about availability. No online payments.
+      Personalised engraved gifts and handcrafted pieces from our workshop near Randburg. Enquire
+      about availability — no online payments.
     </p>
   </div>
 </div>
@@ -75,6 +76,7 @@
     } @else if (goods().length === 0) {
       <p class="page-state">No goods found.</p>
     } @else {
+      <h2 class="visually-hidden">Available goods</h2>
       <div class="grid grid--3 goods-grid">
         @for (good of goods(); track good.id) {
           <app-good-card [good]="good" />

@@ -23,9 +23,9 @@ export class ServicesComponent implements OnInit {
 
   ngOnInit(): void {
     this.seo.update({
-      title: 'Knife Services, Engraving & Courses | Randburg',
+      title: 'Knife Making, Engraving & Repairs | Knowles Knives',
       description:
-        'Knife making, engraving, and custom blade services near Randburg and Johannesburg. Commissions, repairs, and courses by appointment.',
+        'Custom knife commissions, laser engraving, repairs, sharpening, and knife-making courses near Randburg and Johannesburg. By appointment.',
       path: '/services',
     });
 

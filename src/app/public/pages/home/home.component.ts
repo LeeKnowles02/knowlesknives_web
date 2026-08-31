@@ -20,7 +20,7 @@ import { Knife } from '../../../core/models/knife.model';
 import { Service } from '../../../core/models/service.model';
 import { PublicGalleryItem } from '../../../core/models/gallery-item.model';
 import { SeoService } from '../../../core/services/seo.service';
-import { environment } from '../../../../environments/environment';
+import { buildOrganizationJsonLd } from '../../../core/services/seo.util';
 
 @Component({
   selector: 'app-home',
@@ -75,20 +75,11 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.updateItemsPerView();
     this.seo.update({
-      title: 'Knowles Knives — Custom Knife Maker | Randburg & Johannesburg',
+      title: 'Handmade Knives & Custom Engraving | Knowles Knives',
       description:
-        'Custom knife maker based near Randburg, Johannesburg. Handmade knives, bespoke commissions, engraving, blade services, and knife-making courses by appointment.',
+        'Handmade custom knives, laser engraving, and personalised gifts from Knowles Knives near Randburg, serving Johannesburg. Enquire by appointment.',
       path: '/',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'LocalBusiness',
-        name: 'Knowles Knives',
-        url: environment.siteUrl,
-        image: `${environment.siteUrl}/assets/images/knife-hero-1920.jpg`,
-        description:
-          'Custom knife maker based near Randburg, Johannesburg. Handmade knives, bespoke commissions, engraving, and knife-making courses by appointment.',
-        areaServed: ['Randburg', 'Johannesburg', 'South Africa'],
-      },
+      jsonLd: buildOrganizationJsonLd(),
     });
 
     this.knifeApi

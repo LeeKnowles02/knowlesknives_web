@@ -1,15 +1,23 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { environment } from '../../../environments/environment';
+import {
+  absoluteSiteUrl,
+  defaultOgImageUrl,
+  normalizeCanonicalPath,
+} from './seo.util';
+
+export type SeoRobots = 'index, follow' | 'noindex, follow' | 'noindex, nofollow';
 
 export interface SeoConfig {
   title: string;
   description: string;
   path?: string;
+  canonicalPath?: string;
   image?: string;
   type?: 'website' | 'article' | 'product';
-  jsonLd?: Record<string, unknown>;
+  robots?: SeoRobots;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -19,13 +27,16 @@ export class SeoService {
   private readonly document = inject(DOCUMENT);
 
   update(config: SeoConfig): void {
-    const url = this.absoluteUrl(config.path ?? this.currentPath());
-    const image = this.absoluteUrl(config.image ?? 'assets/images/knife-hero.png');
+    const canonicalPath = normalizeCanonicalPath(config.canonicalPath ?? config.path ?? '/');
+    const url = absoluteSiteUrl(canonicalPath);
+    const image = config.image ? absoluteSiteUrl(config.image) : defaultOgImageUrl();
     const type = config.type ?? 'website';
+    const robots = config.robots ?? 'index, follow';
 
     this.title.setTitle(config.title);
     this.setTag('description', config.description);
-    this.setTag('robots', 'index, follow');
+    this.setTag('robots', robots);
+    this.setProperty('og:site_name', 'Knowles Knives');
     this.setProperty('og:title', config.title);
     this.setProperty('og:description', config.description);
     this.setProperty('og:type', type);
@@ -38,7 +49,10 @@ export class SeoService {
     this.setCanonical(url);
 
     if (config.jsonLd) {
-      this.setJsonLd(config.jsonLd);
+      const payload = Array.isArray(config.jsonLd)
+        ? { '@context': 'https://schema.org', '@graph': config.jsonLd.map(stripContext) }
+        : config.jsonLd;
+      this.setJsonLd(payload);
     } else {
       this.removeJsonLd();
     }
@@ -64,7 +78,7 @@ export class SeoService {
     link.setAttribute('href', url);
   }
 
-  private setJsonLd(data: Record<string, unknown>): void {
+  private setJsonLd(data: Record<string, unknown> | Record<string, unknown>[]): void {
     this.removeJsonLd();
     const script = this.document.createElement('script');
     script.type = 'application/ld+json';
@@ -76,18 +90,9 @@ export class SeoService {
   private removeJsonLd(): void {
     this.document.querySelector('#structured-data')?.remove();
   }
+}
 
-  private absoluteUrl(path: string): string {
-    if (/^https?:\/\//i.test(path)) {
-      return path;
-    }
-
-    const base = environment.siteUrl.replace(/\/$/, '');
-    const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    return `${base}${cleanPath}`;
-  }
-
-  private currentPath(): string {
-    return this.document.location?.pathname ?? '/';
-  }
+function stripContext(item: Record<string, unknown>): Record<string, unknown> {
+  const { '@context': _context, ...rest } = item;
+  return rest;
 }

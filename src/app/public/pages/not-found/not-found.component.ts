@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SeoService } from '../../../core/services/seo.service';
+import { HttpStatusService } from '../../../core/services/http-status.service';
 
 @Component({
   selector: 'app-not-found',
@@ -11,13 +12,16 @@ import { SeoService } from '../../../core/services/seo.service';
 })
 export class NotFoundComponent implements OnInit {
   private readonly seo = inject(SeoService);
+  private readonly httpStatus = inject(HttpStatusService);
 
   ngOnInit(): void {
+    this.httpStatus.setStatus(404);
     this.seo.update({
       title: 'Page Not Found | Knowles Knives',
       description:
-        'The page you were looking for could not be found. Browse custom knives, services, or contact Knowles Knives.',
+        'This page could not be found. Browse handmade knives, services, or send an enquiry to Knowles Knives.',
       path: '/404',
+      robots: 'noindex, follow',
     });
   }
 }

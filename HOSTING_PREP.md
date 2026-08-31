@@ -1,10 +1,8 @@
 # Knowles Knives Web Hosting Prep
 
-This project is ready to host as an Angular SSR app. It still expects the API to be available at `/api` in production, or proxied to that path by the hosting setup.
+This project deploys as an Angular 19 runtime SSR app on Railway. The API remains a separate Railway service.
 
-## Code Capsules commands
-
-Use these commands for a Web/Node SSR capsule:
+## Railway commands
 
 ```bash
 npm ci
@@ -12,52 +10,79 @@ npm run build
 npm run serve:ssr
 ```
 
-If Code Capsules separates build and run commands:
-
 - Build command: `npm ci && npm run build`
-- Run command: `npm run serve:ssr`
+- Start command: `npm run serve:ssr`
+- Health check path: `/health`
+- Rollback command: `npm run serve:static`
 
 ## Environment variables
 
-Set these before building for the final hosted URL:
+Set these on the **web** Railway service before building:
 
 ```bash
-SITE_URL=https://REPLACE_WITH_CODE_CAPSULES_URL
-API_URL=https://REPLACE_WITH_CODE_CAPSULES_URL/api
-API_ORIGIN=https://REPLACE_WITH_CODE_CAPSULES_URL
+SITE_URL=https://knowlesknives.co.za
+API_URL=https://knowlesknivesapi-production.up.railway.app/api
+```
+
+Set these on the **API** Railway service:
+
+```bash
+CLIENT_URL=https://knowlesknives.co.za
+```
+
+During domain cutover, both origins can be allowed:
+
+```bash
+CLIENT_URLS=https://knowlesknives.co.za,https://soothing-celebration-production-c6df.up.railway.app
 ```
 
 `SITE_URL` is used to generate `robots.txt`, `sitemap.xml`, canonical URLs, and social preview URLs.
 
-`API_URL` is used only by `scripts/prepare-hosting.cjs` to fetch knife slugs for prerendering. If the API is not live yet, the build still works and prerenders the static public routes.
-
-`API_ORIGIN` is used at runtime by the SSR server to proxy browser and server requests from `/api` to the backend API capsule. Defaults to `http://localhost:5000` for local SSR.
+`API_URL` is used by `scripts/prepare-hosting.cjs` to fetch active knife and goods slugs for the sitemap.
 
 ## Generated files
 
 `npm run build` runs `npm run prepare:hosting` first. That script generates:
 
-- `routes.txt` for Angular prerendering
+- `routes.txt`
 - `public/sitemap.xml`
 - `public/robots.txt`
 
-Static routes are always included:
+Static routes always included:
 
 - `/`
 - `/knives`
+- `/goods`
 - `/services`
 - `/gallery`
 - `/about`
 - `/contact`
 - `/404`
 
-Knife detail routes are added when `API_URL/knives` returns active knife slugs.
+Knife and goods detail routes are added when the API returns active slugs.
 
-## After Code Capsules gives the temporary URL
+## Custom domain setup
 
-1. Set `SITE_URL` to the Code Capsules URL.
-2. Set `API_URL` to the public API URL.
-3. Rebuild so `sitemap.xml`, `robots.txt`, and prerender routes are regenerated.
-4. Replace `siteUrl` in `src/environments/environment.prod.ts` if you want the compiled Angular app to use the exact Code Capsules URL for route-level canonical and Open Graph tags.
+1. Point `knowlesknives.co.za` to the Railway web service.
+2. Redirect `www.knowlesknives.co.za` to the apex domain in Railway.
+3. Set `SITE_URL=https://knowlesknives.co.za` and rebuild the web service.
+4. Set `CLIENT_URL=https://knowlesknives.co.za` on the API service.
+5. Submit `https://knowlesknives.co.za/sitemap.xml` in Google Search Console.
 
-When a custom domain is added later, repeat the same steps with the real domain.
+The SSR server also redirects the old Railway frontend hostname and `www` to the apex domain.
+
+## Local SSR verification
+
+```bash
+npm run build
+npm run serve:ssr
+```
+
+Then inspect raw HTML for public routes:
+
+- `/`
+- `/knives`
+- `/knives/<slug>`
+- `/404`
+
+Confirm title, description, canonical, robots, Open Graph tags, and JSON-LD are present in the server response.

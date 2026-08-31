@@ -10,10 +10,15 @@ import {
   AvailabilityBadgePipe,
 } from '../../../shared/pipes/availability.pipe';
 import { CurrencyZarPipe } from '../../../shared/pipes/currency-zar.pipe';
-import { getKnifeImages } from '../../../shared/utils/knife-images.util';
+import { getKnifeImages, parseKnifePrice } from '../../../shared/utils/knife-images.util';
 import { KnifeImage } from '../../../core/models/knife-image.model';
 import { SeoService } from '../../../core/services/seo.service';
-import { environment } from '../../../../environments/environment';
+import {
+  buildBreadcrumbJsonLd,
+  buildProductJsonLd,
+  truncateDescription,
+} from '../../../core/services/seo.util';
+import { HttpStatusService } from '../../../core/services/http-status.service';
 
 @Component({
   selector: 'app-knife-details',
@@ -26,6 +31,7 @@ export class KnifeDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly knifeApi = inject(KnifeApiService);
   private readonly seo = inject(SeoService);
+  private readonly httpStatus = inject(HttpStatusService);
   private readonly destroyRef = inject(DestroyRef);
 
   knife = signal<Knife | null>(null);
@@ -65,12 +71,14 @@ export class KnifeDetailsComponent implements OnInit {
       .subscribe((knife) => {
         if (knife === undefined) {
           this.loading.set(false);
+          this.updateErrorSeo();
           return;
         }
 
         if (knife === null) {
           this.notFound.set(true);
           this.loading.set(false);
+          this.updateNotFoundSeo();
           return;
         }
 
@@ -87,41 +95,57 @@ export class KnifeDetailsComponent implements OnInit {
   }
 
   private updateSeo(knife: Knife): void {
-    const image = this.galleryImages[0]?.imageUrl ?? 'assets/images/knife-hero.png';
+    const image = this.galleryImages[0]?.imageUrl ?? undefined;
     const sourceDescription =
-      knife.description ??
       knife.shortDescription ??
-      `Handcrafted ${knife.category} knife from Knowles Knives.`;
-    const description =
-      sourceDescription.length > 155 ? `${sourceDescription.slice(0, 152)}...` : sourceDescription;
+      knife.description ??
+      `Handcrafted ${knife.category.toLowerCase()} knife from Knowles Knives.`;
+    const description = truncateDescription(sourceDescription);
+    const path = `/knives/${knife.slug}`;
 
     this.seo.update({
-      title: `${knife.name} — Custom ${knife.category} Knife | Knowles Knives`,
+      title: `${knife.name} | ${knife.category} Knife | Knowles Knives`,
       description,
-      path: `/knives/${knife.slug}`,
+      path,
       image,
       type: 'product',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'Product',
-        name: knife.name,
-        description,
-        image: image.startsWith('http') ? image : `${environment.siteUrl}/${image}`,
-        brand: {
-          '@type': 'Brand',
-          name: 'Knowles Knives',
-        },
-        category: knife.category,
-        offers: {
-          '@type': 'Offer',
-          availability:
-            knife.availability === 'Available'
-              ? 'https://schema.org/InStock'
-              : 'https://schema.org/LimitedAvailability',
-          priceCurrency: 'ZAR',
-          url: `${environment.siteUrl}/knives/${knife.slug}`,
-        },
-      },
+      jsonLd: [
+        buildProductJsonLd({
+          name: knife.name,
+          description,
+          path,
+          image,
+          category: knife.category,
+          price: parseKnifePrice(knife.price),
+          availability: knife.availability,
+        }),
+        buildBreadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Knives', path: '/knives' },
+          { name: knife.name, path },
+        ]),
+      ],
+    });
+  }
+
+  private updateNotFoundSeo(): void {
+    this.httpStatus.setStatus(404);
+    this.seo.update({
+      title: 'Knife Not Found | Knowles Knives',
+      description:
+        'This knife could not be found. Browse handmade knives from Knowles Knives or send an enquiry.',
+      path: '/knives',
+      robots: 'noindex, follow',
+    });
+  }
+
+  private updateErrorSeo(): void {
+    this.seo.update({
+      title: 'Knife Unavailable | Knowles Knives',
+      description:
+        'This knife page could not be loaded right now. Browse handmade knives from Knowles Knives or try again later.',
+      path: '/knives',
+      robots: 'noindex, follow',
     });
   }
 }

@@ -42,6 +42,11 @@
             "outputPath": "dist/knowles-knives",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "src/server.ts"
+            },
             "polyfills": [
               "zone.js"
             ],
@@ -56,7 +61,16 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "security": {
+              "allowedHosts": [
+                "localhost",
+                "127.0.0.1",
+                "knowlesknives.co.za",
+                "www.knowlesknives.co.za",
+                "soothing-celebration-production-c6df.up.railway.app"
+              ]
+            }
           },
           "configurations": {
             "production": {

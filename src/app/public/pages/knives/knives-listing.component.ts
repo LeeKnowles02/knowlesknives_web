@@ -46,10 +46,28 @@ export class KnivesListingComponent implements OnInit {
 
   ngOnInit(): void {
     this.seo.update({
-      title: 'Custom Knives for Sale | Knowles Knives',
+      title: 'Handmade Chef & Custom Knives South Africa | Knowles Knives',
       description:
-        'Browse handcrafted custom knives from Knowles Knives, including hunting knives, chef knives, utility blades, and bespoke pieces.',
+        'Browse handmade chef knives, cooking knives, and custom blades from Knowles Knives near Randburg. Enquire for availability — no online checkout.',
       path: '/knives',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: 'https://knowlesknives.co.za/',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Knives',
+            item: 'https://knowlesknives.co.za/knives',
+          },
+        ],
+      },
     });
     this.applyFilters();
   }

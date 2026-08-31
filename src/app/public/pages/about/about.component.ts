@@ -14,9 +14,9 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
     this.seo.update({
-      title: 'About Knowles Knives | Handcrafted Workshop near Randburg',
+      title: 'South African Knife Maker near Randburg | Knowles Knives',
       description:
-        'Handcrafted knife-making workshop based near Randburg. Custom blades, hand finishing, and bespoke commissions serving Johannesburg.',
+        'Handcrafted knife-making workshop near Randburg, serving Johannesburg. Custom blades, hand finishing, and bespoke commissions.',
       path: '/about',
       image: 'assets/images/workshop.jpg',
     });

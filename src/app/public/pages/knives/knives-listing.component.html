@@ -3,7 +3,8 @@
     <h1 class="page-hero__title">Our Knives</h1>
 
     <p class="page-hero__subtitle">
-      Handcrafted blades — enquire about availability. No online payments.
+      Handmade chef knives, cooking knives, and custom blades from our Randburg workshop. Enquire
+      about availability — no online payments.
     </p>
   </div>
 </div>
@@ -75,6 +76,7 @@
     } @else if (knives().length === 0) {
       <p class="page-state">No knives found.</p>
     } @else {
+      <h2 class="visually-hidden">Available knives</h2>
       <div class="grid grid--3 knives-grid">
         @for (knife of knives(); track knife.id) {
           <app-knife-card [knife]="knife" />

@@ -46,9 +46,9 @@ export class GoodsListingComponent implements OnInit {
 
   ngOnInit(): void {
     this.seo.update({
-      title: 'Engraved & Handcrafted Goods | Knowles Knives',
+      title: 'Engraved & Handcrafted Gifts | Knowles Knives',
       description:
-        'Browse engraved and handcrafted goods from Knowles Knives — personalised pieces and workshop-made items. Enquire about availability.',
+        'Personalised engraved gifts and handcrafted pieces from Knowles Knives near Randburg. Enquire for availability in Johannesburg.',
       path: '/goods',
     });
     this.applyFilters();

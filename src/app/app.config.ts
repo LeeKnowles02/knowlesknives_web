@@ -1,6 +1,10 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import {
+  provideClientHydration,
+  withHttpTransferCacheOptions,
+} from '@angular/platform-browser';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth.interceptor';
 
@@ -14,6 +18,7 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: 'enabled',
       }),
     ),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideClientHydration(withHttpTransferCacheOptions({ includePostRequests: false })),
   ],
 };

@@ -1,14 +1,9 @@
 /
 /knives
+/goods
 /services
 /gallery
 /about
 /contact
 /404
-/knives/star-lord
-/knives/lee-knowles
 /knives/bushcraft-companion
-/knives/heritage-bowie
-/knives/custom-edc-slim
-/knives/fieldmaster-hunter
-/knives/chefs-utility

@@ -24,9 +24,9 @@ export class GalleryComponent implements OnInit {
 
   ngOnInit(): void {
     this.seo.update({
-      title: 'Knife Gallery | Knowles Knives',
+      title: 'Handmade Knife & Engraving Gallery | Knowles Knives',
       description:
-        'View custom knives, workshop moments, engravings, and finished blade work from Knowles Knives.',
+        'Photos of handmade knives, custom engravings, and workshop craft from Knowles Knives near Randburg and Johannesburg.',
       path: '/gallery',
     });
 
