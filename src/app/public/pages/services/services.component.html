@@ -22,7 +22,7 @@
         @for (service of services(); track service.id) {
           <article class="service-detail">
             <div class="service-detail__image">
-              <img [src]="service.imageUrl" [alt]="service.title" />
+              <img [src]="imageUrl(service)" [alt]="service.title" />
             </div>
 
             <div class="service-detail__content">

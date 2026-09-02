@@ -40,11 +40,11 @@ export class AdminServiceFormComponent implements OnInit {
   ngOnInit(): void {
     this.serviceForm = this.fb.group({
       title: ['', Validators.required],
-      shortDescription: ['', Validators.required],
-      description: ['', Validators.required],
-      enquiryType: ['Custom Knife' as ServiceEnquiryType, Validators.required],
-      imageUrl: ['', Validators.required],
-      active: [true],
+      shortDescription: [''],
+      description: [''],
+      enquiryType: ['Custom Knife' as ServiceEnquiryType],
+      imageUrl: [''],
+      active: [false],
       featured: [false],
     });
 
@@ -88,10 +88,10 @@ export class AdminServiceFormComponent implements OnInit {
     const value = this.serviceForm.value;
     const payload: ServicePayload = {
       title: value.title,
-      shortDescription: value.shortDescription,
-      description: value.description,
+      shortDescription: value.shortDescription?.trim() || undefined,
+      description: value.description?.trim() || undefined,
       enquiryType: value.enquiryType,
-      imageUrl: value.imageUrl,
+      imageUrl: value.imageUrl?.trim() || undefined,
       active: value.active,
       featured: value.featured,
     };

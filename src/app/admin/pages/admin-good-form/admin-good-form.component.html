@@ -6,7 +6,7 @@
       {{
         isEditMode
           ? 'Update item details, images, and availability.'
-          : 'Add a new engraved or handcrafted item to the catalogue.'
+          : 'Add a new item to the catalogue. Save as inactive until photos and details are complete.'
       }}
     </p>
   </div>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="form-group">
-      <label for="category">Category *</label>
+      <label for="category">Category</label>
       <select id="category" formControlName="category">
         @for (cat of categories; track cat) {
           <option [value]="cat">{{ cat }}</option>
@@ -44,7 +44,7 @@
     </div>
 
     <div class="form-group">
-      <label for="availability">Availability *</label>
+      <label for="availability">Availability</label>
       <select id="availability" formControlName="availability">
         @for (avail of availabilities; track avail) {
           <option [value]="avail">{{ avail }}</option>
@@ -53,27 +53,18 @@
     </div>
 
     <div class="form-group form-grid__full">
-      <label for="shortDescription">Short Description *</label>
+      <label for="shortDescription">Short Description</label>
       <input id="shortDescription" type="text" formControlName="shortDescription" />
-      @if (isInvalid('shortDescription')) {
-        <span class="error">Required</span>
-      }
     </div>
 
     <div class="form-group form-grid__full">
-      <label for="description">Full Description *</label>
+      <label for="description">Full Description</label>
       <textarea id="description" formControlName="description" rows="4"></textarea>
-      @if (isInvalid('description')) {
-        <span class="error">Required</span>
-      }
     </div>
 
     <div class="form-group">
-      <label for="material">Material *</label>
+      <label for="material">Material</label>
       <input id="material" type="text" formControlName="material" />
-      @if (isInvalid('material')) {
-        <span class="error">Required</span>
-      }
     </div>
 
     <div class="form-group">
@@ -98,12 +89,9 @@
 
     <div class="form-grid__full">
       <p class="form-hint">
-        Up to 4 images. Image 1 is the primary display photo (used on cards and listings).
+        Up to 4 images. Image 1 is the primary display photo. Photos can be added later.
       </p>
-      <app-image-picker formControlName="image1" label="Image 1 — Primary" [required]="true" />
-      @if (isInvalid('image1')) {
-        <span class="error">Required</span>
-      }
+      <app-image-picker formControlName="image1" label="Image 1 — Primary" />
       <app-image-picker formControlName="image2" label="Image 2 — Optional" />
       <app-image-picker formControlName="image3" label="Image 3 — Optional" />
       <app-image-picker formControlName="image4" label="Image 4 — Optional" />

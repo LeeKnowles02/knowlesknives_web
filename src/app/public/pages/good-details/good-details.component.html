@@ -21,11 +21,7 @@
         <div class="good-detail__grid">
           <div class="good-detail__gallery">
             <div class="good-detail__main-image">
-              @if (selectedImage) {
-                <img [src]="selectedImage" [alt]="good.name" />
-              } @else {
-                <div class="good-detail__placeholder">No image available</div>
-              }
+              <img [src]="selectedImage" [alt]="good.name" />
             </div>
             @if (galleryImages.length > 1) {
               <div class="good-detail__thumbs">

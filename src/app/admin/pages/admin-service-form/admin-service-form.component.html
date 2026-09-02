@@ -6,7 +6,7 @@
       {{
         isEditMode
           ? 'Update service details and visibility.'
-          : 'Add a new service to the public site.'
+          : 'Add a new service. Save as inactive until the image and details are complete.'
       }}
     </p>
   </div>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="form-group">
-      <label for="enquiryType">Enquiry Type *</label>
+      <label for="enquiryType">Enquiry Type</label>
       <select id="enquiryType" formControlName="enquiryType">
         @for (type of enquiryTypes; track type) {
           <option [value]="type">{{ type }}</option>
@@ -39,26 +39,17 @@
     </div>
 
     <div class="form-group form-grid__full">
-      <label for="shortDescription">Short Description *</label>
+      <label for="shortDescription">Short Description</label>
       <input id="shortDescription" type="text" formControlName="shortDescription" />
-      @if (isInvalid('shortDescription')) {
-        <span class="error">Required</span>
-      }
     </div>
 
     <div class="form-group form-grid__full">
-      <label for="description">Full Description *</label>
+      <label for="description">Full Description</label>
       <textarea id="description" formControlName="description" rows="4"></textarea>
-      @if (isInvalid('description')) {
-        <span class="error">Required</span>
-      }
     </div>
 
     <div class="form-group form-grid__full">
-      <app-image-picker formControlName="imageUrl" label="Service Image" [required]="true" />
-      @if (isInvalid('imageUrl')) {
-        <span class="error">Required</span>
-      }
+      <app-image-picker formControlName="imageUrl" label="Service Image" />
     </div>
 
     <div class="form-group">

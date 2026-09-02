@@ -11,6 +11,7 @@ import {
 } from '../../../shared/pipes/availability.pipe';
 import { CurrencyZarPipe } from '../../../shared/pipes/currency-zar.pipe';
 import { getGoodImages, parseGoodPrice } from '../../../shared/utils/good-images.util';
+import { resolveProductImage } from '../../../shared/utils/image-fallback.util';
 import { GoodImage } from '../../../core/models/good-image.model';
 import { SeoService } from '../../../core/services/seo.service';
 import {
@@ -84,14 +85,14 @@ export class GoodDetailsComponent implements OnInit {
 
         this.good.set(good);
         this.galleryImages = getGoodImages(good);
-        this.selectedImage = this.galleryImages[0]?.imageUrl ?? '';
+        this.selectedImage = resolveProductImage(this.galleryImages[0]?.imageUrl);
         this.updateSeo(good);
         this.loading.set(false);
       });
   }
 
   selectImage(url: string): void {
-    this.selectedImage = url;
+    this.selectedImage = resolveProductImage(url);
   }
 
   private updateSeo(good: Good): void {

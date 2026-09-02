@@ -11,6 +11,7 @@ import {
 } from '../../../shared/pipes/availability.pipe';
 import { CurrencyZarPipe } from '../../../shared/pipes/currency-zar.pipe';
 import { getKnifeImages, parseKnifePrice } from '../../../shared/utils/knife-images.util';
+import { resolveProductImage } from '../../../shared/utils/image-fallback.util';
 import { KnifeImage } from '../../../core/models/knife-image.model';
 import { SeoService } from '../../../core/services/seo.service';
 import {
@@ -84,14 +85,14 @@ export class KnifeDetailsComponent implements OnInit {
 
         this.knife.set(knife);
         this.galleryImages = getKnifeImages(knife);
-        this.selectedImage = this.galleryImages[0]?.imageUrl ?? '';
+        this.selectedImage = resolveProductImage(this.galleryImages[0]?.imageUrl);
         this.updateSeo(knife);
         this.loading.set(false);
       });
   }
 
   selectImage(url: string): void {
-    this.selectedImage = url;
+    this.selectedImage = resolveProductImage(url);
   }
 
   private updateSeo(knife: Knife): void {

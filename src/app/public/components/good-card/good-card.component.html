@@ -1,11 +1,7 @@
 <article class="good-card">
   <a [routerLink]="['/goods', good.slug]" class="good-card__image-link">
     <div class="good-card__image">
-      @if (primaryImage; as src) {
-        <img [src]="src" [alt]="good.name" loading="lazy" />
-      } @else {
-        <div class="good-card__placeholder">No image available</div>
-      }
+      <img [src]="primaryImage" [alt]="good.name" loading="lazy" />
       <div class="good-card__image-shade"></div>
       <span class="badge badge--{{ good.availability | availabilityBadge }} good-card__badge">
         {{ good.availability | availabilityLabel }}

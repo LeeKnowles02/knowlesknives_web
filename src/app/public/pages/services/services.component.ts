@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { ServiceApiService } from '../../../core/api/service-api.service';
 import { Service } from '../../../core/models/service.model';
 import { SeoService } from '../../../core/services/seo.service';
+import { resolveProductImage } from '../../../shared/utils/image-fallback.util';
 
 @Component({
   selector: 'app-services',
@@ -42,5 +43,9 @@ export class ServicesComponent implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  imageUrl(service: Service): string {
+    return resolveProductImage(service.imageUrl);
   }
 }

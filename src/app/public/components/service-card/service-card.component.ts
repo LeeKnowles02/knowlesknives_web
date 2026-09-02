@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Service } from '../../../core/models/service.model';
+import { resolveProductImage } from '../../../shared/utils/image-fallback.util';
 
 @Component({
   selector: 'app-service-card',
@@ -11,4 +12,8 @@ import { Service } from '../../../core/models/service.model';
 })
 export class ServiceCardComponent {
   @Input({ required: true }) service!: Service;
+
+  imageUrl(): string {
+    return resolveProductImage(this.service.imageUrl);
+  }
 }

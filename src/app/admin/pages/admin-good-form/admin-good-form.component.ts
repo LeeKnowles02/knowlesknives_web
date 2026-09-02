@@ -44,22 +44,22 @@ export class AdminGoodFormComponent implements OnInit {
   ngOnInit(): void {
     this.goodForm = this.fb.group({
       name: ['', Validators.required],
-      category: ['Engraved', Validators.required],
-      price: [null as number | null, Validators.required],
-      availability: ['Available' as GoodAvailability, Validators.required],
-      shortDescription: ['', Validators.required],
-      description: ['', Validators.required],
-      material: ['', Validators.required],
+      category: ['Engraved'],
+      price: [null as number | null],
+      availability: ['Available' as GoodAvailability],
+      shortDescription: [''],
+      description: [''],
+      material: [''],
       finish: [''],
       dimensions: [''],
       personalization: [''],
-      image1: ['', Validators.required],
+      image1: [''],
       image2: [''],
       image3: [''],
       image4: [''],
       notes: [''],
       featured: [false],
-      active: [true],
+      active: [false],
     });
 
     this.route.paramMap
@@ -125,22 +125,18 @@ export class AdminGoodFormComponent implements OnInit {
       value.name,
     );
 
-    if (images.length === 0) {
-      return;
-    }
-
     const payload: GoodPayload = {
       name: value.name,
       category: value.category,
       price: value.price ?? null,
       availability: value.availability,
-      shortDescription: value.shortDescription,
-      description: value.description,
-      material: value.material,
-      finish: value.finish || undefined,
-      dimensions: value.dimensions || undefined,
-      personalization: value.personalization || undefined,
-      notes: value.notes || undefined,
+      shortDescription: value.shortDescription?.trim() || undefined,
+      description: value.description?.trim() || undefined,
+      material: value.material?.trim() || undefined,
+      finish: value.finish?.trim() || undefined,
+      dimensions: value.dimensions?.trim() || undefined,
+      personalization: value.personalization?.trim() || undefined,
+      notes: value.notes?.trim() || undefined,
       featured: value.featured,
       active: value.active,
       images,

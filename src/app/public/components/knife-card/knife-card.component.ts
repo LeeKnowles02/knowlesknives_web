@@ -8,6 +8,7 @@ import {
 
 import { CurrencyZarPipe } from '../../../shared/pipes/currency-zar.pipe';
 import { getKnifePrimaryImage } from '../../../shared/utils/knife-images.util';
+import { resolveProductImage } from '../../../shared/utils/image-fallback.util';
 
 @Component({
   selector: 'app-knife-card',
@@ -18,7 +19,7 @@ import { getKnifePrimaryImage } from '../../../shared/utils/knife-images.util';
 })
 export class KnifeCardComponent {
   @Input({ required: true }) knife!: Knife;
-  get primaryImage(): string | null {
-    return getKnifePrimaryImage(this.knife);
+  get primaryImage(): string {
+    return resolveProductImage(getKnifePrimaryImage(this.knife));
   }
 }

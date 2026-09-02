@@ -7,6 +7,7 @@ import {
 } from '../../../shared/pipes/availability.pipe';
 import { CurrencyZarPipe } from '../../../shared/pipes/currency-zar.pipe';
 import { getGoodPrimaryImage } from '../../../shared/utils/good-images.util';
+import { resolveProductImage } from '../../../shared/utils/image-fallback.util';
 
 @Component({
   selector: 'app-good-card',
@@ -18,7 +19,7 @@ import { getGoodPrimaryImage } from '../../../shared/utils/good-images.util';
 export class GoodCardComponent {
   @Input({ required: true }) good!: Good;
 
-  get primaryImage(): string | null {
-    return getGoodPrimaryImage(this.good);
+  get primaryImage(): string {
+    return resolveProductImage(getGoodPrimaryImage(this.good));
   }
 }

@@ -49,7 +49,7 @@ export function buildOrganizationJsonLd(): Record<string, unknown> {
         '@type': 'Organization',
         name: 'Knowles Knives',
         url: environment.siteUrl,
-        logo: absoluteSiteUrl('assets/images/knowles-knives-logo.png'),
+        logo: absoluteSiteUrl('assets/images/knowles-knives-logo.svg'),
         description:
           'Handmade custom knives, engraving, repairs, and knife-making courses near Randburg, serving Johannesburg.',
         areaServed: ['Randburg', 'Johannesburg', 'South Africa'],

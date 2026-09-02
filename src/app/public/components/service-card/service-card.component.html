@@ -1,6 +1,6 @@
 <article class="service-card">
   <div class="service-card__image">
-    <img [src]="service.imageUrl" [alt]="service.title" loading="lazy" />
+    <img [src]="imageUrl()" [alt]="service.title" loading="lazy" />
   </div>
   <div class="service-card__body">
     <h3 class="service-card__title">{{ service.title }}</h3>

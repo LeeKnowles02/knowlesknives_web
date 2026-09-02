@@ -44,22 +44,22 @@ export class AdminKnifeFormComponent implements OnInit {
   ngOnInit(): void {
     this.knifeForm = this.fb.group({
       name: ['', Validators.required],
-      category: ['Hunting', Validators.required],
-      price: [null as number | null, Validators.required],
-      availability: ['Available' as KnifeAvailability, Validators.required],
-      shortDescription: ['', Validators.required],
-      description: ['', Validators.required],
-      steelType: ['', Validators.required],
-      handleMaterial: ['', Validators.required],
-      bladeLength: ['', Validators.required],
-      overallLength: ['', Validators.required],
-      image1: ['', Validators.required],
+      category: ['Hunting'],
+      price: [null as number | null],
+      availability: ['Available' as KnifeAvailability],
+      shortDescription: [''],
+      description: [''],
+      steelType: [''],
+      handleMaterial: [''],
+      bladeLength: [''],
+      overallLength: [''],
+      image1: [''],
       image2: [''],
       image3: [''],
       image4: [''],
       notes: [''],
       featured: [false],
-      active: [true],
+      active: [false],
     });
 
     this.route.paramMap
@@ -125,22 +125,18 @@ export class AdminKnifeFormComponent implements OnInit {
       value.name,
     );
 
-    if (images.length === 0) {
-      return;
-    }
-
     const payload: KnifePayload = {
       name: value.name,
       category: value.category,
       price: value.price ?? null,
       availability: value.availability,
-      shortDescription: value.shortDescription,
-      description: value.description,
-      steelType: value.steelType,
-      handleMaterial: value.handleMaterial,
-      bladeLength: value.bladeLength,
-      overallLength: value.overallLength,
-      notes: value.notes || undefined,
+      shortDescription: value.shortDescription?.trim() || undefined,
+      description: value.description?.trim() || undefined,
+      steelType: value.steelType?.trim() || undefined,
+      handleMaterial: value.handleMaterial?.trim() || undefined,
+      bladeLength: value.bladeLength?.trim() || undefined,
+      overallLength: value.overallLength?.trim() || undefined,
+      notes: value.notes?.trim() || undefined,
       featured: value.featured,
       active: value.active,
       images,

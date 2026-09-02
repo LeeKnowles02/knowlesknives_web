@@ -21,11 +21,7 @@
         <div class="knife-detail__grid">
           <div class="knife-detail__gallery">
             <div class="knife-detail__main-image">
-              @if (selectedImage) {
-                <img [src]="selectedImage" [alt]="knife.name" />
-              } @else {
-                <div class="knife-detail__placeholder">No image available</div>
-              }
+              <img [src]="selectedImage" [alt]="knife.name" />
             </div>
             @if (galleryImages.length > 1) {
               <div class="knife-detail__thumbs">
@@ -53,22 +49,30 @@
             <p class="knife-detail__desc">{{ knife.description }}</p>
 
             <dl class="knife-detail__specs">
-              <div>
-                <dt>Steel Type</dt>
-                <dd>{{ knife.steelType }}</dd>
-              </div>
-              <div>
-                <dt>Handle Material</dt>
-                <dd>{{ knife.handleMaterial }}</dd>
-              </div>
-              <div>
-                <dt>Blade Length</dt>
-                <dd>{{ knife.bladeLength }}</dd>
-              </div>
-              <div>
-                <dt>Overall Length</dt>
-                <dd>{{ knife.overallLength }}</dd>
-              </div>
+              @if (knife.steelType) {
+                <div>
+                  <dt>Steel Type</dt>
+                  <dd>{{ knife.steelType }}</dd>
+                </div>
+              }
+              @if (knife.handleMaterial) {
+                <div>
+                  <dt>Handle Material</dt>
+                  <dd>{{ knife.handleMaterial }}</dd>
+                </div>
+              }
+              @if (knife.bladeLength) {
+                <div>
+                  <dt>Blade Length</dt>
+                  <dd>{{ knife.bladeLength }}</dd>
+                </div>
+              }
+              @if (knife.overallLength) {
+                <div>
+                  <dt>Overall Length</dt>
+                  <dd>{{ knife.overallLength }}</dd>
+                </div>
+              }
             </dl>
 
             @if (knife.notes) {

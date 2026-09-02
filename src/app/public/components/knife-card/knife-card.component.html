@@ -1,11 +1,7 @@
 <article class="knife-card">
   <a [routerLink]="['/knives', knife.slug]" class="knife-card__image-link">
     <div class="knife-card__image">
-      @if (primaryImage; as src) {
-        <img [src]="src" [alt]="knife.name" loading="lazy" />
-      } @else {
-        <div class="knife-card__placeholder">No image available</div>
-      }
+      <img [src]="primaryImage" [alt]="knife.name" loading="lazy" />
       <div class="knife-card__image-shade"></div>
       <span class="badge badge--{{ knife.availability | availabilityBadge }} knife-card__badge">
         {{ knife.availability | availabilityLabel }}
