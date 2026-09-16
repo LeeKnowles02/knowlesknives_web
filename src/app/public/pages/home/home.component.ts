@@ -13,11 +13,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KnifeApiService } from '../../../core/api/knife-api.service';
 import { ServiceApiService } from '../../../core/api/service-api.service';
+import { GoodApiService } from '../../../core/api/good-api.service';
 import { GalleryService } from '../../../core/services/gallery.service';
 import { KnifeCardComponent } from '../../components/knife-card/knife-card.component';
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
+import { GoodCardComponent } from '../../components/good-card/good-card.component';
 import { Knife } from '../../../core/models/knife.model';
 import { Service } from '../../../core/models/service.model';
+import { Good } from '../../../core/models/good.model';
 import { PublicGalleryItem } from '../../../core/models/gallery-item.model';
 import { SeoService } from '../../../core/services/seo.service';
 import { buildOrganizationJsonLd } from '../../../core/services/seo.util';
@@ -25,27 +28,31 @@ import { buildOrganizationJsonLd } from '../../../core/services/seo.util';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, KnifeCardComponent, ServiceCardComponent],
+  imports: [RouterLink, KnifeCardComponent, ServiceCardComponent, GoodCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
   private readonly knifeApi = inject(KnifeApiService);
   private readonly serviceApi = inject(ServiceApiService);
+  private readonly goodApi = inject(GoodApiService);
   private readonly galleryService = inject(GalleryService);
   private readonly seo = inject(SeoService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
 
   featuredKnives = signal<Knife[]>([]);
+  featuredGoods = signal<Good[]>([]);
   carouselIndex = signal(0);
   itemsPerView = signal(3);
   services = signal<Service[]>([]);
   galleryPreview = signal<PublicGalleryItem[]>([]);
   knivesLoading = signal(true);
+  goodsLoading = signal(true);
   servicesLoading = signal(true);
   galleryLoading = signal(true);
   knivesError = signal<string | null>(null);
+  goodsError = signal<string | null>(null);
   servicesError = signal<string | null>(null);
   galleryError = signal<string | null>(null);
 
@@ -108,6 +115,20 @@ export class HomeComponent implements OnInit {
         error: () => {
           this.servicesError.set('Could not load services. Please try again.');
           this.servicesLoading.set(false);
+        },
+      });
+
+    this.goodApi
+      .getGoods({ featured: true })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (goods) => {
+          this.featuredGoods.set(goods);
+          this.goodsLoading.set(false);
+        },
+        error: () => {
+          this.goodsError.set('Could not load featured goods. Please try again.');
+          this.goodsLoading.set(false);
         },
       });
 

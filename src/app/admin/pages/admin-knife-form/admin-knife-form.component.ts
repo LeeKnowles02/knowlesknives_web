@@ -10,6 +10,7 @@ import {
 } from '../../../core/models/knife.model';
 import { buildKnifeImagesFromFields } from '../../../shared/utils/knife-images.util';
 import { ImagePickerComponent } from '../../../shared/components/image-picker/image-picker.component';
+import { SwitchFieldComponent } from '../../../shared/components/switch-field/switch-field.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { switchMap, of, catchError } from 'rxjs';
 import { ApiError } from '../../../core/api/api-client.service';
@@ -17,7 +18,7 @@ import { ApiError } from '../../../core/api/api-client.service';
 @Component({
   selector: 'app-admin-knife-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ImagePickerComponent],
+  imports: [ReactiveFormsModule, RouterLink, ImagePickerComponent, SwitchFieldComponent],
   templateUrl: './admin-knife-form.component.html',
   styleUrl: './admin-knife-form.component.scss',
 })

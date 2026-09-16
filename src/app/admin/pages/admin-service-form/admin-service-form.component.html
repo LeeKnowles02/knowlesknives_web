@@ -52,18 +52,23 @@
       <app-image-picker formControlName="imageUrl" label="Service Image" />
     </div>
 
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" formControlName="active" />
-        Active (visible on public site)
-      </label>
-    </div>
-
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" formControlName="featured" />
-        Featured
-      </label>
+    <div class="form-grid__full visibility-switches">
+      <app-switch-field
+        inputId="service-active"
+        formControlName="active"
+        label="Visible on the website"
+        onLabel="Active"
+        offLabel="Hidden"
+        hint="Hidden services stay in admin and do not appear on the public site."
+      />
+      <app-switch-field
+        inputId="service-featured"
+        formControlName="featured"
+        label="Feature on the homepage"
+        onLabel="Featured"
+        offLabel="Off"
+        hint="Use this to mark a service as a featured offer."
+      />
     </div>
   </div>
 

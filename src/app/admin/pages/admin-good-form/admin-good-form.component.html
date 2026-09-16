@@ -102,18 +102,23 @@
       <textarea id="notes" formControlName="notes" rows="2"></textarea>
     </div>
 
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" formControlName="featured" />
-        Featured (max 5)
-      </label>
-    </div>
-
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" formControlName="active" />
-        Active (visible on public site)
-      </label>
+    <div class="form-grid__full visibility-switches">
+      <app-switch-field
+        inputId="good-active"
+        formControlName="active"
+        label="Visible on the website"
+        onLabel="Active"
+        offLabel="Hidden"
+        hint="Hidden goods stay in admin and do not appear on the public site."
+      />
+      <app-switch-field
+        inputId="good-featured"
+        formControlName="featured"
+        label="Feature on the homepage"
+        onLabel="Featured"
+        offLabel="Off"
+        hint="Appears in the homepage goods section when this item is also visible. Maximum 5 featured goods."
+      />
     </div>
   </div>
 

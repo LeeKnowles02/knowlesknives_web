@@ -10,6 +10,7 @@ import {
 } from '../../../core/models/good.model';
 import { buildGoodImagesFromFields } from '../../../shared/utils/good-images.util';
 import { ImagePickerComponent } from '../../../shared/components/image-picker/image-picker.component';
+import { SwitchFieldComponent } from '../../../shared/components/switch-field/switch-field.component';
 import { ToastService } from '../../../shared/services/toast.service';
 import { switchMap, of, catchError } from 'rxjs';
 import { ApiError } from '../../../core/api/api-client.service';
@@ -17,7 +18,7 @@ import { ApiError } from '../../../core/api/api-client.service';
 @Component({
   selector: 'app-admin-good-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ImagePickerComponent],
+  imports: [ReactiveFormsModule, RouterLink, ImagePickerComponent, SwitchFieldComponent],
   templateUrl: './admin-good-form.component.html',
   styleUrl: './admin-good-form.component.scss',
 })

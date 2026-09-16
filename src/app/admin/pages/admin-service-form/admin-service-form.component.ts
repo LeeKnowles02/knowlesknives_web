@@ -10,12 +10,13 @@ import {
 } from '../../../core/models/service.model';
 import { switchMap, of, catchError } from 'rxjs';
 import { ImagePickerComponent } from '../../../shared/components/image-picker/image-picker.component';
+import { SwitchFieldComponent } from '../../../shared/components/switch-field/switch-field.component';
 import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-admin-service-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ImagePickerComponent],
+  imports: [ReactiveFormsModule, RouterLink, ImagePickerComponent, SwitchFieldComponent],
   templateUrl: './admin-service-form.component.html',
   styleUrl: './admin-service-form.component.scss',
 })

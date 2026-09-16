@@ -36,6 +36,8 @@
 
           <th>Availability</th>
 
+          <th>Visible</th>
+
           <th>Featured</th>
 
           <th>Actions</th>
@@ -68,9 +70,22 @@
             </td>
 
             <td>
-              @if (good.featured && good.active) {
+              <span
+                class="admin-badge"
+                [class.admin-badge--active]="good.active"
+                [class.admin-badge--inactive]="!good.active"
+              >
+                {{ good.active ? 'Active' : 'Hidden' }}
+              </span>
+            </td>
+
+            <td>
+              @if (good.featured) {
                 <span class="admin-badge admin-badge--featured">
                   Yes@if (good.featuredOrder) { (#{{ good.featuredOrder }}) }
+                  @if (!good.active) {
+                    <span> · hidden</span>
+                  }
                 </span>
               } @else {
                 <span class="admin-badge admin-badge--inactive">No</span>

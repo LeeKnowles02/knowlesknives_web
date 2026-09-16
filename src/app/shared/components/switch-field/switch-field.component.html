@@ -1,0 +1,27 @@
+<label
+  class="switch-field"
+  [class.switch-field--on]="checked"
+  [class.switch-field--disabled]="disabled"
+  [for]="inputId || null"
+>
+  <input
+    class="switch-field__input"
+    type="checkbox"
+    [id]="inputId || null"
+    [checked]="checked"
+    [disabled]="disabled"
+    role="switch"
+    [attr.aria-checked]="checked"
+    (change)="onToggle($event)"
+  />
+  <span class="switch-field__track" aria-hidden="true">
+    <span class="switch-field__thumb"></span>
+  </span>
+  <span class="switch-field__copy">
+    <span class="switch-field__label">{{ label }}</span>
+    <span class="switch-field__state">{{ checked ? onLabel : offLabel }}</span>
+    @if (hint) {
+      <span class="switch-field__hint">{{ hint }}</span>
+    }
+  </span>
+</label>

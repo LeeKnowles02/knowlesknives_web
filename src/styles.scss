@@ -369,7 +369,7 @@ button {
     color: $color-charcoal;
   }
 
-  input,
+  input:not([type='checkbox']):not([type='radio']),
   textarea {
     @include form-control;
   }

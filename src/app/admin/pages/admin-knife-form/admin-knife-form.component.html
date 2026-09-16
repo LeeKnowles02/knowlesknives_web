@@ -97,18 +97,23 @@
       <textarea id="notes" formControlName="notes" rows="2"></textarea>
     </div>
 
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" formControlName="featured" />
-        Featured on homepage (max 5)
-      </label>
-    </div>
-
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" formControlName="active" />
-        Active (visible on public site)
-      </label>
+    <div class="form-grid__full visibility-switches">
+      <app-switch-field
+        inputId="knife-active"
+        formControlName="active"
+        label="Visible on the website"
+        onLabel="Active"
+        offLabel="Hidden"
+        hint="Hidden knives stay in admin and do not appear on the public site."
+      />
+      <app-switch-field
+        inputId="knife-featured"
+        formControlName="featured"
+        label="Feature on the homepage"
+        onLabel="Featured"
+        offLabel="Off"
+        hint="Appears in the homepage knives section when this knife is also visible. Maximum 8 featured knives."
+      />
     </div>
   </div>
 

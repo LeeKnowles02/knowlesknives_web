@@ -127,6 +127,34 @@
   </div>
 </section>
 
+@if (goodsLoading() || goodsError() || featuredGoods().length > 0) {
+  <section id="featured-goods" class="section section--cream">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-header__label">Handcrafted Gifts</span>
+        <h2 class="section-header__title">Featured Goods</h2>
+        <p class="section-header__subtitle">
+          Engraved pieces and handcrafted gifts — enquire for availability.
+        </p>
+      </div>
+      @if (goodsLoading()) {
+        <p class="page-state">Loading goods…</p>
+      } @else if (goodsError()) {
+        <p class="page-state page-state--error">{{ goodsError() }}</p>
+      } @else {
+        <div class="grid grid--3">
+          @for (good of featuredGoods(); track good.id) {
+            <app-good-card [good]="good" />
+          }
+        </div>
+      }
+      <div class="section-cta">
+        <a routerLink="/goods" class="btn btn--outline-dark">View All Goods</a>
+      </div>
+    </div>
+  </section>
+}
+
 <section class="section section--dark">
   <div class="container">
     <div class="section-header">

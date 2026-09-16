@@ -624,6 +624,18 @@ img.admin-thumb {
   }
 }
 
+.visibility-switches {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid $admin-border;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
 // ─── Enquiries list ────────────────────────────────────────────────────────────
 
 .enquiries-list {

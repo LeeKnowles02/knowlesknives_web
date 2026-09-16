@@ -1,6 +1,7 @@
 import { environment } from '../../../environments/environment';
 import {
   absoluteSiteUrl,
+  buildOrganizationJsonLd,
   buildProductJsonLd,
   defaultOgImageUrl,
   normalizeCanonicalPath,
@@ -25,6 +26,11 @@ describe('seo.util', () => {
 
   it('uses the default OG image fallback', () => {
     expect(defaultOgImageUrl()).toBe(`${siteOrigin}/assets/images/knife-hero-1920.jpg`);
+  });
+
+  it('uses the raster brand logo in organization JSON-LD', () => {
+    const graph = (buildOrganizationJsonLd()['@graph'] as Array<Record<string, unknown>>)[0];
+    expect(graph['logo']).toBe(`${siteOrigin}/assets/images/knowles-knives-logo.png`);
   });
 
   it('truncates long descriptions safely', () => {
