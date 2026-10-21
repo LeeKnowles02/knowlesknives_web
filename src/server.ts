@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
-const CANONICAL_HOST = 'knowlesknives.co.za';
+const CANONICAL_HOST = 'knowlesknivesweb-nbhu.codecapsules.co.za';
 const LEGACY_HOSTS = new Set([
   'www.knowlesknives.co.za',
   'soothing-celebration-production-c6df.up.railway.app',
@@ -23,6 +23,7 @@ const angularApp = new AngularNodeAppEngine({
     '127.0.0.1',
     'knowlesknives.co.za',
     'www.knowlesknives.co.za',
+    'knowlesknivesweb-nbhu.codecapsules.co.za',
     'soothing-celebration-production-c6df.up.railway.app',
   ],
 });
