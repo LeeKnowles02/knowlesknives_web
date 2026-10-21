@@ -102,7 +102,7 @@ function buildSitemap(routes) {
 
       return [
         '  <url>',
-        `    <loc>${siteUrl}${route === '/' ? '/' : route}</loc>`,
+        `    <loc>${siteUrl}${route === '/' ? '/' : route.endsWith('/') ? route : `${route}/`}</loc>`,
         `    <changefreq>${changefreq}</changefreq>`,
         `    <priority>${priority}</priority>`,
         '  </url>',
