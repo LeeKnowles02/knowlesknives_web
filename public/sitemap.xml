@@ -1,42 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://knowlesknives.co.za/</loc>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://knowlesknives.co.za/knives</loc>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://knowlesknives.co.za/goods</loc>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/goods/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://knowlesknives.co.za/services</loc>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/services/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://knowlesknives.co.za/gallery</loc>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/gallery/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://knowlesknives.co.za/about</loc>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/about/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://knowlesknives.co.za/contact</loc>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/contact/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://knowlesknives.co.za/knives/bushcraft-companion</loc>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/pocket-biltong-carver/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/kukri-med/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/camp-skinner-med/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/heritage-chef/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/biltong-carver/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/camp-utility/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/damascus-skinner/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/small-drop-point-hunter-2/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/medium-classic-hunter/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/small-drop-point-hunter/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/classic-hunter/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/boot-dagger/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/trail-companion/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/modern-hunter/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/midnight-dagger/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://knowlesknivesweb-nbhu.codecapsules.co.za/knives/bushcraft-companion/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

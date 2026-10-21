@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://knowlesknives.co.za/sitemap.xml
+Sitemap: https://knowlesknivesweb-nbhu.codecapsules.co.za/sitemap.xml
