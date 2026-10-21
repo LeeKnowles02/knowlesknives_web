@@ -11,10 +11,10 @@ import {
 describe('seo.util', () => {
   const siteOrigin = environment.siteUrl.replace(/\/$/, '');
 
-  it('normalizes canonical paths without query strings or trailing slashes', () => {
-    expect(normalizeCanonicalPath('/contact?knifeId=1')).toBe('/contact');
-    expect(normalizeCanonicalPath('/knives/')).toBe('/knives');
-    expect(normalizeCanonicalPath('//knives//star-lord//')).toBe('/knives/star-lord');
+  it('normalizes canonical paths with a trailing slash and no query string', () => {
+    expect(normalizeCanonicalPath('/contact?knifeId=1')).toBe('/contact/');
+    expect(normalizeCanonicalPath('/knives/')).toBe('/knives/');
+    expect(normalizeCanonicalPath('//knives//star-lord//')).toBe('/knives/star-lord/');
   });
 
   it('builds absolute site URLs', () => {

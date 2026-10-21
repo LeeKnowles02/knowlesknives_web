@@ -1,4 +1,5 @@
 import { environment } from '../../../environments/environment';
+import { withTrailingSlash } from '../../trailing-slash';
 
 const DEFAULT_OG_IMAGE = 'assets/images/knife-hero-1920.jpg';
 
@@ -15,8 +16,8 @@ export function absoluteSiteUrl(path: string): string {
 export function normalizeCanonicalPath(path: string): string {
   const withoutQuery = path.split(/[?#]/)[0] || '/';
   const collapsed = withoutQuery.replace(/\/{2,}/g, '/');
-  const trimmed = collapsed.length > 1 ? collapsed.replace(/\/+$/, '') : collapsed;
-  return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  const withLeadingSlash = collapsed.startsWith('/') ? collapsed : `/${collapsed}`;
+  return withTrailingSlash(withLeadingSlash);
 }
 
 export function truncateDescription(text: string, maxLength = 155): string {

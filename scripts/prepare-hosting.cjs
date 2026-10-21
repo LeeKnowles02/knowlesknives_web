@@ -7,7 +7,7 @@ const routesPath = path.join(projectRoot, 'routes.txt');
 const sitemapPath = path.join(publicDir, 'sitemap.xml');
 const robotsPath = path.join(publicDir, 'robots.txt');
 
-const DEFAULT_SITE_URL = 'https://knowlesknives.co.za';
+const DEFAULT_SITE_URL = 'https://knowlesknivesweb-nbhu.codecapsules.co.za';
 const siteUrl = normalizeSiteUrl(
   process.env.SITE_URL || process.env.PUBLIC_SITE_URL || DEFAULT_SITE_URL,
 );
@@ -102,7 +102,7 @@ function buildSitemap(routes) {
 
       return [
         '  <url>',
-        `    <loc>${siteUrl}${route === '/' ? '/' : route}</loc>`,
+        `    <loc>${siteUrl}${route === '/' ? '/' : route.endsWith('/') ? route : `${route}/`}</loc>`,
         `    <changefreq>${changefreq}</changefreq>`,
         `    <priority>${priority}</priority>`,
         '  </url>',

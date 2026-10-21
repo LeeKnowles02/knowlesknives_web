@@ -11,6 +11,7 @@ import {
 import { parseKnifePrice } from '../../../shared/utils/knife-images.util';
 import { availabilityFilterLabel } from '../../../shared/pipes/availability.pipe';
 import { SeoService } from '../../../core/services/seo.service';
+import { absoluteSiteUrl } from '../../../core/services/seo.util';
 import { SelectFieldComponent } from '../../../shared/components/select-field/select-field.component';
 import { SelectOption } from '../../../shared/models/select-option.model';
 
@@ -58,13 +59,13 @@ export class KnivesListingComponent implements OnInit {
             '@type': 'ListItem',
             position: 1,
             name: 'Home',
-            item: 'https://knowlesknives.co.za/',
+            item: absoluteSiteUrl('/'),
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: 'Knives',
-            item: 'https://knowlesknives.co.za/knives',
+            item: absoluteSiteUrl('/knives'),
           },
         ],
       },
