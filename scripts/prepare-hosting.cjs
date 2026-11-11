@@ -8,10 +8,12 @@ const sitemapPath = path.join(publicDir, 'sitemap.xml');
 const robotsPath = path.join(publicDir, 'robots.txt');
 
 const DEFAULT_SITE_URL = 'https://knowlesknives.co.za';
+// Matches apiUrl in src/environments/environment.prod.ts so builds list every product without extra config.
+const DEFAULT_API_URL = 'https://knowlesknivesapi-production.up.railway.app/api';
 const siteUrl = normalizeSiteUrl(
   process.env.SITE_URL || process.env.PUBLIC_SITE_URL || DEFAULT_SITE_URL,
 );
-const apiUrl = normalizeApiUrl(process.env.API_URL || 'http://localhost:5000/api');
+const apiUrl = normalizeApiUrl(process.env.API_URL || DEFAULT_API_URL);
 const isProductionBuild = process.env.NODE_ENV === 'production' || process.argv.includes('--production');
 
 const staticRoutes = [
