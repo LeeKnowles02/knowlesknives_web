@@ -25,8 +25,6 @@ const angularApp = new AngularNodeAppEngine({
     'www.knowlesknives.co.za',
     'soothing-celebration-production-c6df.up.railway.app',
   ],
-  // Railway's proxy sends these; without trusting them Angular skips SSR and serves an empty page.
-  trustProxyHeaders: ['x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-for'],
 });
 
 app.get('/health', (_req, res) => {
